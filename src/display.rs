@@ -41,7 +41,7 @@ fn get_max_single_display_resolution() -> String {
 
 
     for resolution in resolutions.to_owned() {
-        let current_resolution = multiply_resolution(resolution.clone());
+        let current_resolution = multiply_resolution(&resolution);
 
         if current_resolution > max_resolution {
             max_resolution = current_resolution;
@@ -52,7 +52,7 @@ fn get_max_single_display_resolution() -> String {
     return resolution_string;
 }
 
-fn multiply_resolution(resolution: String) -> i32 {
+fn multiply_resolution(resolution: &String) -> i32 {
     let mut multiply = 1;
 
     resolution
@@ -81,8 +81,7 @@ fn execute_display_command(cmd: String) -> String {
     return if is_display_var_set() {
         execute_command(cmd)
     } else {
-        let s1 = String::from("DISPLAY=:0 ");
-        execute_command((s1 + &cmd))
+        execute_command(String::from("DISPLAY=:0 ") + &cmd)
     };
 }
 
