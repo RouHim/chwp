@@ -1,15 +1,20 @@
 use curl::easy::Easy;
-
 use rand::Rng;
 
 use crate::config::Config;
 use crate::display::DisplayInfo;
 
-const BASE_URL: &str = "https://pixabay.com/api/?key=15495421-a5108e860086b11eddaea0efa&per_page=50";
+const BASE_URL: &str = "https://pixabay.com/api/?key=15495421-a5108e860086b11eddaea0efa&per_page=25";
 
-pub fn get_image_url(config: Config, display_info: DisplayInfo) -> String {
+pub fn get_image_data(config: &Config, display_info: &DisplayInfo) -> Vec<u8> {
+    let image_url = get_image_url(config, display_info);
+    println!("{}", image_url);
+    return download_data(&image_url);
+}
+
+pub fn get_image_url(config: &Config, display_info: &DisplayInfo) -> String {
     let request_url = build_request_url(config, display_info);
-    let json_string = get_data_from_url(&request_url);
+    let json_string = download_as_string(&request_url);
 
     let value: serde_json::Value = serde_json::from_str(json_string.as_str()).unwrap();
     let hits = value
@@ -25,11 +30,14 @@ pub fn get_image_url(config: Config, display_info: DisplayInfo) -> String {
     }
 
     let random_index = rand::thread_rng().gen_range(0, images.len() - 1);
-
     return images.get(random_index).unwrap().to_string();
 }
 
-fn get_data_from_url(request_url: &String) -> String {
+fn download_as_string(request_url: &String) -> String {
+    return String::from_utf8(download_data(request_url)).expect("json data parsing");
+}
+
+fn download_data(request_url: &String) -> Vec<u8> {
     let mut data = Vec::new();
     let mut handle = Easy::new();
     handle.url(request_url.as_str()).unwrap();
@@ -41,10 +49,10 @@ fn get_data_from_url(request_url: &String) -> String {
         }).unwrap();
         transfer.perform().unwrap();
     }
-    return String::from_utf8(data).expect("json data parsing");
+    return data;
 }
 
-fn build_request_url(config: Config, display_info: DisplayInfo) -> String {
+fn build_request_url(config: &Config, display_info: &DisplayInfo) -> String {
     let mut target_width = get_width(&display_info.max_single_resolution);
     if config.span {
         target_width = get_width(&display_info.total_resolution);

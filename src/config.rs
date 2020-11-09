@@ -10,14 +10,14 @@ pub fn parse_cli(args: Vec<String>) -> Config {
     let mut keywords = args.to_vec();
     remove_element(&mut keywords, span_string);
 
+    if keywords.is_empty() {
+        keywords.push("wallpaper".to_string());
+    }
+
     return Config {
         span,
         keywords,
     };
-}
-
-fn contains_term(args: Vec<String>, term: String) -> bool {
-    return args.contains(&term);
 }
 
 fn remove_element(keywords: &mut Vec<String>, term: String) {
