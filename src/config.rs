@@ -3,7 +3,7 @@ pub struct Config {
     pub keywords: Vec<String>,
 }
 
-pub fn parse_cli(args: Vec<String>) -> Config {
+pub fn parse_cli_args(args: Vec<String>) -> Config {
     let span_string = String::from("span");
     let span = args.contains(&span_string);
 

@@ -1,5 +1,6 @@
 use std::env;
 use std::process::Command;
+use crate::cli;
 
 pub struct DisplayInfo {
     pub count: i8,
@@ -8,7 +9,7 @@ pub struct DisplayInfo {
     pub max_single_resolution: String,
 }
 
-pub fn get_display_info() -> DisplayInfo {
+pub fn get_info() -> DisplayInfo {
     let resolutions = get_display_resolutions();
     let max_single_resolution = get_max_single_display_resolution();
     let total_resolution = get_total_resolution();
@@ -24,11 +25,11 @@ pub fn get_display_info() -> DisplayInfo {
 fn get_total_resolution() -> String {
     return
         if is_display_var_set() {
-            execute_command(
+            cli::execute_command(
                 "(xrandr -q|sed -n 's/.*current[ ]\\([0-9]*\\) x \\([0-9]*\\),.*/\\1x\\2/p')".to_string()
             ).trim().to_string()
         } else {
-            execute_command(
+            cli::execute_command(
                 "(DISPLAY=:0 xrandr -q|sed -n 's/.*current[ ]\\([0-9]*\\) x \\([0-9]*\\),.*/\\1x\\2/p')".to_string()
             ).trim().to_string()
         };
@@ -79,26 +80,14 @@ fn get_display_resolutions() -> Vec<String> {
 
 fn execute_display_command(cmd: String) -> String {
     return if is_display_var_set() {
-        execute_command(cmd)
+        cli::execute_command(cmd)
     } else {
-        execute_command(String::from("DISPLAY=:0 ") + &cmd)
+        cli::execute_command(String::from("DISPLAY=:0 ") + &cmd)
     };
 }
 
-fn execute_command(cmd: String) -> String {
-    let result = Command::new("bash")
-        .arg("-c")
-        .arg(cmd)
-        .output()
-        .expect("failed to execute process");
-
-    let vec = result.stdout.to_owned();
-
-    return String::from_utf8_lossy(&vec).to_string();
-}
-
 fn is_display_var_set() -> bool {
-    match env::var("ENVIRONMENT_VARIABLE") {
+    match env::var("DISPLAY") {
         Ok(s) => s == "yes",
         _ => false
     }

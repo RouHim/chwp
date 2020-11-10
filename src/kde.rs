@@ -7,6 +7,8 @@ use dirs;
 use rand::distributions::Alphanumeric;
 use rand::Rng;
 
+use crate::cli;
+
 pub fn change_wallpaper(image_data: &Vec<u8>) {
     clear_wallpaper_dir();
     let file_path = persists_to_file(image_data);
@@ -48,40 +50,5 @@ fn set_wallpaper(file_path: String) {
         "        d.writeConfig(\"Image\", \"file://", file_path.as_str(), "\");",
         "        d.writeConfig(\"FillMode\", 1);",
         "}'"].join("");
-    execute_command(change_kde_wallpaper_cmd.to_string());
-}
-
-fn execute_command(cmd: String) {
-    let result = Command::new("bash")
-        .arg("-c")
-        .arg(cmd)
-        .output()
-        .expect("failed to execute process");
-
-    println!("{}", String::from_utf8_lossy(&result.stdout.to_owned()).to_string());
-    println!("{}", String::from_utf8_lossy(&result.stderr.to_owned()).to_string());
-}
-
-pub fn execute_kde_command(kde_cmd: String) -> String {
-    let cmd = [
-        "dbus-send --session --dest=org.kde.plasmashell --type=method_call /PlasmaShell org.kde.PlasmaShell.evaluateScript 'string:",
-        kde_cmd.as_str(),
-        "}'"
-    ].join("");
-
-    println!("{}", cmd);
-
-    let result = Command::new("bash")
-        .arg("-c")
-        .arg(cmd)
-        .output()
-        .expect("failed to execute process");
-
-    let stdout = String::from_utf8_lossy(&*result.stdout).to_string();
-    let stderr = String::from_utf8_lossy(&*result.stderr).to_string();
-
-    println!("{}", stdout);
-    println!("{}", stderr);
-
-    return [stdout, stderr].join("");
+    cli::execute_command(change_kde_wallpaper_cmd.to_string());
 }
