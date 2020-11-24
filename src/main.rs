@@ -8,6 +8,7 @@ mod kde;
 mod cli;
 mod display_manager;
 mod gnome;
+mod xfce;
 
 fn main() {
     // get args with app path

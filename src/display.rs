@@ -1,5 +1,4 @@
 use std::env;
-use std::process::Command;
 use crate::cli;
 
 pub struct DisplayInfo {
@@ -26,11 +25,11 @@ fn get_total_resolution() -> String {
     return
         if is_display_var_set() {
             cli::execute_command(
-                "(xrandr -q|sed -n 's/.*current[ ]\\([0-9]*\\) x \\([0-9]*\\),.*/\\1x\\2/p')".to_string()
+                &"(xrandr -q|sed -n 's/.*current[ ]\\([0-9]*\\) x \\([0-9]*\\),.*/\\1x\\2/p')".to_string()
             ).trim().to_string()
         } else {
             cli::execute_command(
-                "(DISPLAY=:0 xrandr -q|sed -n 's/.*current[ ]\\([0-9]*\\) x \\([0-9]*\\),.*/\\1x\\2/p')".to_string()
+                &"(DISPLAY=:0 xrandr -q|sed -n 's/.*current[ ]\\([0-9]*\\) x \\([0-9]*\\),.*/\\1x\\2/p')".to_string()
             ).trim().to_string()
         };
 }
@@ -80,9 +79,9 @@ fn get_display_resolutions() -> Vec<String> {
 
 fn execute_display_command(cmd: String) -> String {
     return if is_display_var_set() {
-        cli::execute_command(cmd)
+        cli::execute_command(&cmd)
     } else {
-        cli::execute_command(String::from("DISPLAY=:0 ") + &cmd)
+        cli::execute_command(&(String::from("DISPLAY=:0 ") + &cmd))
     };
 }
 
