@@ -1,0 +1,26 @@
+.\" Manpage for chwp.
+.\" Contact rouvenhimmelstein(at)gmail.com to report errors or typos.
+.TH man 8 "24 Nov 2020" "1.0" "chwp man page"
+.SH NAME
+chwp \- changes the wallpaper and lockscreen wallpaper randomly
+.SH SYNOPSIS
+chwp [keywords]|[imageurl]
+.SH DESCRIPTION
+chwp provides the ability to change the wallpaper from the command line.
+.SH OPTIONS
+span  \-  spans a picture over all monitors
+.SH EXAMPLES
+chwp \- Changes the wallpaper and lockscreen wallpaper randomly
+
+chwp water nature \- Changes the wallpaper according to the given keywords
+
+chwp https://source.unsplash.com/daily \- Changes the wallpaper by a given image url
+
+chwp water nature /home/user/Pictures https://source.unsplash.com/daily \- Define multiple wallpaper sources, a random one is picked
+
+.SH Wallpaper rotation
+
+Can be done via crontab.
+
+.SH AUTHOR
+R. Himmelstein(rouvenhimmelstein@gmail.com)

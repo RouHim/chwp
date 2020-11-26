@@ -1,4 +1,5 @@
 use std::env;
+
 use crate::cli;
 
 pub struct DisplayInfo {

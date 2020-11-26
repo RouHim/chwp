@@ -1,15 +1,15 @@
-use curl::easy::Easy;
 use rand::Rng;
 
 use crate::config::Config;
 use crate::display::DisplayInfo;
+use crate::file_receiver;
 
 const BASE_URL: &str = "https://pixabay.com/api/?key=15495421-a5108e860086b11eddaea0efa&per_page=25";
 
 pub fn get_image_data(config: &Config, display_info: &DisplayInfo) -> Vec<u8> {
     let image_url = get_image_url(config, display_info);
     println!("{}", image_url);
-    return download_data(&image_url);
+    return file_receiver::download_data(&image_url);
 }
 
 pub fn get_image_url(config: &Config, display_info: &DisplayInfo) -> String {
@@ -29,27 +29,12 @@ pub fn get_image_url(config: &Config, display_info: &DisplayInfo) -> String {
         images.push(image_url);
     }
 
-    let random_index = rand::thread_rng().gen_range(0, images.len() - 1);
+    let random_index = rand::thread_rng().gen_range(0, images.len());
     return images.get(random_index).unwrap().to_string();
 }
 
 fn download_as_string(request_url: &String) -> String {
-    return String::from_utf8(download_data(request_url)).expect("json data parsing");
-}
-
-fn download_data(request_url: &String) -> Vec<u8> {
-    let mut data = Vec::new();
-    let mut handle = Easy::new();
-    handle.url(request_url.as_str()).unwrap();
-    {
-        let mut transfer = handle.transfer();
-        transfer.write_function(|new_data| {
-            data.extend_from_slice(new_data);
-            Ok(new_data.len())
-        }).unwrap();
-        transfer.perform().unwrap();
-    }
-    return data;
+    return String::from_utf8(file_receiver::download_data(request_url)).expect("json data parsing");
 }
 
 fn build_request_url(config: &Config, display_info: &DisplayInfo) -> String {
@@ -64,7 +49,7 @@ fn build_request_url(config: &Config, display_info: &DisplayInfo) -> String {
     }
 
     let mut request_url = BASE_URL.to_string();
-    append_str(&mut request_url, "&q=", config.keywords.get(0).unwrap());
+    append_str(&mut request_url, "&q=", &config.keyword);
     append_str(&mut request_url, "&min_width=", &target_width);
     append_str(&mut request_url, "&min_height=", &target_height);
 

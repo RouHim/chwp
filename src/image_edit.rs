@@ -8,7 +8,7 @@ pub fn scale_image(image_data: &Vec<u8>, span: bool, display_info: &DisplayInfo)
     println!("{} bytes", image_data.len());
 
     let read_s = Instant::now();
-    let mut img = image::load_from_memory_with_format(&image_data, ImageFormat::Jpeg).unwrap();
+    let mut img = image::load_from_memory(&image_data).unwrap();
     // let mut img = image::load_from_memory(&image_data).unwrap();
     println!("read time: {:.2?}", read_s.elapsed());
 
