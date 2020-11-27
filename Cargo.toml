@@ -4,7 +4,7 @@
 name = "chwp"
 version = "0.0.18"
 authors = ["Rouven Himmelstein <rouven@himmelstein.info>"]
-license = "GNU"
+license = "GPL3"
 description = "Change your wallpaper from command line"
 readme = "README.md"
 homepage = "https://github.com/RouHim/chwp-rust"

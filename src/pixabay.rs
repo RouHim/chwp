@@ -12,7 +12,7 @@ pub fn get_image_data(config: &Config, display_info: &DisplayInfo) -> Vec<u8> {
     return file_receiver::download_data(&image_url);
 }
 
-pub fn get_image_url(config: &Config, display_info: &DisplayInfo) -> String {
+fn get_image_url(config: &Config, display_info: &DisplayInfo) -> String {
     let request_url = build_request_url(config, display_info);
     let json_string = download_as_string(&request_url);
 

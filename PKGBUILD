@@ -9,7 +9,7 @@ pkgdesc="Changes the background wallpaper and lockscreen from the command line."
 arch=('x86_64')
 url="https://gitlab.com/rouvenhimmelstein/chwp"
 license=('GPL3')
-depends=('qt5-base')
+depends=('xrandr')
 makedepends=('git' 'rust')
 provides=('chwp')
 conflicts=('chwp')
@@ -27,7 +27,7 @@ build() {
 package() {
     # install executable
     chmod +x target/release/${_cmdname}
-    cp +x target/release/${_cmdname} /usr/local/bin/
+    cp target/release/${_cmdname} /usr/local/bin/
 
     # install man page
     install -D -m755 ${_cmdname}.1 ${pkgdir}/usr/share/man/man1/${_cmdname}.1
