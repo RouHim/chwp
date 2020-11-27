@@ -6,3 +6,11 @@ jobs:
       - checkout
       - run: sudo apt-get update && sudo apt-get install -y pkg-config libssl-dev
       - run: cargo build --release
+      - store_artifacts:
+          path: target/release/chwp
+  deploy:
+    - image: ubuntu
+      steps:
+        - attach_workspace:
+            at: .
+        - run: tree
