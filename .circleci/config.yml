@@ -9,8 +9,9 @@ jobs:
       - store_artifacts:
           path: target/release/chwp
   deploy:
-    - image: ubuntu
-      steps:
-        - attach_workspace:
-            at: .
-        - run: tree
+    docker:
+      - image: ubuntu
+    steps:
+      - attach_workspace:
+        at: .
+      - run: tree
