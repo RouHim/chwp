@@ -28,7 +28,7 @@ pub fn parse_cli_args(args: Vec<String>) -> Config {
 
 fn choose_random_keyword(keywords: Vec<String>) -> String {
     return if keywords.len() > 1 {
-        let random_index = rand::thread_rng().gen_range(0, keywords.len());
+        let random_index = rand::thread_rng().gen_range(0..keywords.len());
         keywords.get(random_index).unwrap().to_string()
     } else {
         keywords.get(0).unwrap().to_string()

@@ -1,10 +1,11 @@
-use std::env;
+use std::{env, fs};
 use std::fs::File;
 use std::io::Write;
 use std::path::{Path, PathBuf};
 
 use rand::distributions::Alphanumeric;
 use rand::Rng;
+use std::time::{SystemTime, UNIX_EPOCH};
 
 use crate::{gnome, kde, xfce};
 use crate::cli::execute_command;
@@ -67,10 +68,13 @@ fn persists_to_file(image_data: &Vec<u8>) -> String {
 }
 
 fn build_target_path() -> String {
-    let user_home = dirs::home_dir().unwrap();
-    let file_name = [
-        rand::thread_rng().sample_iter(&Alphanumeric).take(10).collect::<String>(),
-        ".jpg".to_string()].join("");
-    let path: PathBuf = [user_home.to_str().unwrap(), ".wallpaper", file_name.as_str()].iter().collect();
-    return path.to_str().unwrap().to_string();
+    let mut user_home = dirs::home_dir().unwrap();
+    let random_file_name =
+        [
+            SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_millis().to_string(),
+            ".jpg".to_string()
+        ].join("");
+    user_home.push(".wallpaper");
+    user_home.push(random_file_name);
+    return user_home.into_os_string().into_string().unwrap();
 }

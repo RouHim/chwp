@@ -32,7 +32,7 @@ fn read_random_file_from_directory(directory_path: &String) -> Vec<u8> {
         }
     }
 
-    let random_index = rand::thread_rng().gen_range(0, images.len());
+    let random_index = rand::thread_rng().gen_range(0..images.len());
     return read_file(images.get(random_index).unwrap());
 }
 

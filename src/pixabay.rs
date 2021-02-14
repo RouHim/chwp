@@ -29,7 +29,7 @@ fn get_image_url(config: &Config, display_info: &DisplayInfo) -> String {
         images.push(image_url);
     }
 
-    let random_index = rand::thread_rng().gen_range(0, images.len());
+    let random_index = rand::thread_rng().gen_range(0.. images.len());
     return images.get(random_index).unwrap().to_string();
 }
 
