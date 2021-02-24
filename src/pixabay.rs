@@ -17,24 +17,20 @@ fn get_image_url(config: &Config, display_info: &DisplayInfo) -> String {
     let json_string = download_as_string(&request_url);
 
     let value: serde_json::Value = serde_json::from_str(json_string.as_str()).unwrap();
-    let hits = value
-        .get("hits")
-        .unwrap()
-        .as_array()
-        .unwrap();
+    let images: Vec<&str> = value
+        .get("hits").unwrap()
+        .as_array().unwrap()
+        .iter()
+        .map(|hit| hit.get("imageURL").unwrap().as_str().unwrap())
+        .collect();
 
-    let mut images = Vec::new();
-    for entry in hits {
-        let image_url = entry.get("imageURL").unwrap().as_str().unwrap();
-        images.push(image_url);
-    }
-
-    let random_index = rand::thread_rng().gen_range(0.. images.len());
+    let random_index = rand::thread_rng().gen_range(0..images.len());
     return images.get(random_index).unwrap().to_string();
 }
 
 fn download_as_string(request_url: &String) -> String {
-    return String::from_utf8(file_receiver::download_data(request_url)).expect("json data parsing");
+    let data = file_receiver::download_data(request_url);
+    return String::from_utf8(data).unwrap();
 }
 
 fn build_request_url(config: &Config, display_info: &DisplayInfo) -> String {

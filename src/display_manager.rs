@@ -1,10 +1,7 @@
-use std::{env, fs};
+use std::env;
 use std::fs::File;
 use std::io::Write;
 use std::path::{Path, PathBuf};
-
-use rand::distributions::Alphanumeric;
-use rand::Rng;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use crate::{gnome, kde, xfce};

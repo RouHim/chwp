@@ -7,6 +7,7 @@ use std::path::PathBuf;
 use rand::Rng;
 
 pub fn download_data(request_url: &String) -> Vec<u8> {
+    println!("downloading: {}", request_url);
     return reqwest::blocking::get(request_url).unwrap()
         .bytes().unwrap()
         .to_vec();

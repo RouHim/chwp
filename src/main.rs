@@ -26,7 +26,6 @@ fn main() {
     let display_info = display::get_info();
 
     // retrieve the image data from pixabay
-
     let mut image_data = if config::is_url(&config.keyword) {
         file_receiver::download_data(&config.keyword)
     } else if config::is_local_path(&config.keyword) {
