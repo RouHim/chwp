@@ -6,13 +6,13 @@ use crate::file_receiver;
 
 const BASE_URL: &str = "https://pixabay.com/api/?key=15495421-a5108e860086b11eddaea0efa&per_page=25";
 
-pub fn get_image_data(config: &Config, display_info: &DisplayInfo) -> Vec<u8> {
-    let image_url = get_image_url(config, display_info);
+pub fn get_random_image(config: &Config, display_info: &DisplayInfo) -> Vec<u8> {
+    let image_url = build_image_url(config, display_info);
     println!("{}", image_url);
-    return file_receiver::download_data(&image_url);
+    file_receiver::download_data(&image_url)
 }
 
-fn get_image_url(config: &Config, display_info: &DisplayInfo) -> String {
+fn build_image_url(config: &Config, display_info: &DisplayInfo) -> String {
     let request_url = build_request_url(config, display_info);
     let json_string = download_as_string(&request_url);
 
@@ -30,7 +30,7 @@ fn get_image_url(config: &Config, display_info: &DisplayInfo) -> String {
 
 fn download_as_string(request_url: &String) -> String {
     let data = file_receiver::download_data(request_url);
-    return String::from_utf8(data).unwrap();
+    String::from_utf8(data).unwrap()
 }
 
 fn build_request_url(config: &Config, display_info: &DisplayInfo) -> String {
@@ -46,27 +46,24 @@ fn build_request_url(config: &Config, display_info: &DisplayInfo) -> String {
 
     let mut request_url = BASE_URL.to_string();
     append_str(&mut request_url, "&q=", &config.keyword);
-    append_str(&mut request_url, "&min_width=", &target_width);
-    append_str(&mut request_url, "&min_height=", &target_height);
+    append_str(&mut request_url, "&min_width=", target_width);
+    append_str(&mut request_url, "&min_height=", target_height);
 
-    return request_url;
+    request_url
 }
 
-fn append_str(base_string: &mut String, str1: &str, str2: &String) {
-    base_string.push_str(&[str1, str2.as_str()].join(""))
+fn append_str(base_string: &mut String, str1: &str, str2: &str) {
+    base_string.push_str(&[str1, str2].join(""))
 }
 
-fn get_width(resolution_string: &String) -> String {
-    return resolution_string.split("x")
+fn get_width(resolution_string: &str) -> &str {
+    return resolution_string.split('x')
         .next()
-        .expect("wrong display resolution format")
-        .to_string();
+        .expect("wrong display resolution format");
 }
 
-fn get_height(resolution_string: &String) -> String {
-    return resolution_string.split("x")
-        .skip(1)
-        .next()
-        .expect("wrong display resolution format")
-        .to_string();
+fn get_height(resolution_string: &str) -> &str {
+    return resolution_string.split('x')
+        .nth(1)
+        .expect("wrong display resolution format");
 }

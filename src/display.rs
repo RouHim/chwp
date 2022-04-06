@@ -3,7 +3,7 @@ use std::env;
 use crate::cli;
 
 pub struct DisplayInfo {
-    pub count: i8,
+    pub display_count: u8,
     pub resolutions: Vec<String>,
     pub total_resolution: String,
     pub max_single_resolution: String,
@@ -14,12 +14,12 @@ pub fn get_info() -> DisplayInfo {
     let max_single_resolution = get_max_single_display_resolution();
     let total_resolution = get_total_resolution();
 
-    return DisplayInfo {
-        count: resolutions.len() as i8,
+    DisplayInfo {
+        display_count: resolutions.len() as u8,
         resolutions,
         total_resolution,
         max_single_resolution,
-    };
+    }
 }
 
 fn is_wayland() -> bool {
@@ -56,7 +56,7 @@ fn get_max_single_display_resolution() -> String {
     let mut max_resolution = 0;
     let mut resolution_string = String::from("");
 
-    for resolution in resolutions.to_owned() {
+    for resolution in resolutions {
         let current_resolution = multiply_resolution(&resolution);
 
         if current_resolution > max_resolution {
@@ -65,18 +65,18 @@ fn get_max_single_display_resolution() -> String {
         }
     }
 
-    return resolution_string;
+    resolution_string
 }
 
-fn multiply_resolution(resolution: &String) -> i32 {
+fn multiply_resolution(resolution: &str) -> i32 {
     let mut multiply = 1;
 
     resolution
-        .split("x")
+        .split('x')
         .map(|s| s.parse::<i32>().unwrap())
         .for_each(|n| multiply *= n);
 
-    return multiply;
+    multiply
 }
 
 fn get_display_resolutions() -> Vec<String> {
@@ -84,8 +84,8 @@ fn get_display_resolutions() -> Vec<String> {
         .trim()
         .to_string();
 
-    return if resolutions_string.contains("\n") {
-        resolutions_string.split("\n")
+    return if resolutions_string.contains('\n') {
+        resolutions_string.split('\n')
             .map(|s| s.to_string())
             .collect()
     } else {
@@ -94,21 +94,19 @@ fn get_display_resolutions() -> Vec<String> {
 }
 
 fn execute_display_command(cmd: String) -> String {
-    return if is_display_var_set() {
+    if is_display_var_set() {
         cli::execute_command(&cmd)
+    } else if is_wayland() {
+        cli::execute_command(&(String::from("WAYLAND_DISPLAY=:wayland-0 ") + &cmd))
     } else {
-        return if is_wayland() {
-            cli::execute_command(&(String::from("WAYLAND_DISPLAY=:wayland-0 ") + &cmd))
-        } else {
-            cli::execute_command(&(String::from("DISPLAY=:0 ") + &cmd))
-        };
-    };
+        cli::execute_command(&(String::from("DISPLAY=:0 ") + &cmd))
+    }
 }
 
 fn is_display_var_set() -> bool {
-    return if is_wayland() {
+    if is_wayland() {
         env::var("WAYLAND_DISPLAY").is_ok()
     } else {
         env::var("DISPLAY").is_ok()
-    };
+    }
 }

@@ -6,19 +6,22 @@ use std::path::PathBuf;
 
 use rand::Rng;
 
+// "https://api.pexels.com/v1/search?query=nature&per_page=1&size=large&orientation=landscape"
+//  "Authorization: 563492ad6f917000010000019f97ee18f8054ee99831df9380aab81f"
+
 pub fn download_data(request_url: &String) -> Vec<u8> {
     println!("downloading: {}", request_url);
-    return reqwest::blocking::get(request_url).unwrap()
+    reqwest::blocking::get(request_url).unwrap()
         .bytes().unwrap()
-        .to_vec();
+        .to_vec()
 }
 
 pub fn read_file(file_path: &String) -> Vec<u8> {
-    return if metadata(file_path).unwrap().is_file() {
+    if metadata(file_path).unwrap().is_file() {
         fs::read(file_path).expect("Unable to read file")
     } else {
         read_random_file_from_directory(file_path)
-    };
+    }
 }
 
 fn read_random_file_from_directory(directory_path: &String) -> Vec<u8> {
@@ -39,8 +42,8 @@ fn read_random_file_from_directory(directory_path: &String) -> Vec<u8> {
 
 fn is_picture(file_path: PathBuf) -> bool {
     let file_extension = file_path.extension().unwrap().to_str().unwrap().to_lowercase();
-    return file_extension == "png"
+    file_extension == "png"
         || file_extension == "jpg"
         || file_extension == "bmp"
-        || file_extension == "jpeg";
+        || file_extension == "jpeg"
 }

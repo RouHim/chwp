@@ -20,10 +20,10 @@ pub fn parse_cli_args(args: Vec<String>) -> Config {
         choose_random_keyword(keywords)
     };
 
-    return Config {
+    Config {
         span,
         keyword,
-    };
+    }
 }
 
 fn choose_random_keyword(keywords: Vec<String>) -> String {
@@ -39,13 +39,13 @@ fn remove_element(keywords: &mut Vec<String>, term: String) {
     let index = keywords.iter()
         .position(|item| *item == term);
 
-    if index.is_some() {
-        keywords.remove(index.unwrap());
+    if let Some(index) = index {
+        keywords.remove(index);
     }
 }
 
-pub fn is_url(keyword: &String) -> bool {
-    return keyword.starts_with("http") && keyword.contains("://");
+pub fn is_url(keyword: &str) -> bool {
+    keyword.starts_with("http") && keyword.contains("://")
 }
 
 pub fn is_local_path(keyword: &String) -> bool {

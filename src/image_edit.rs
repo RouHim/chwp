@@ -1,14 +1,15 @@
+use std::io::BufWriter;
 use std::time::Instant;
 
 use image::{GenericImageView, ImageFormat};
 
 use crate::display::DisplayInfo;
 
-pub fn scale_image(image_data: &Vec<u8>, span: bool, display_info: &DisplayInfo) -> Vec<u8> {
+pub fn scale_image(image_data: &[u8], span: bool, display_info: &DisplayInfo) -> Vec<u8> {
     println!("{} bytes", image_data.len());
 
     let read_s = Instant::now();
-    let mut img = image::load_from_memory(&image_data).unwrap();
+    let mut img = image::load_from_memory(image_data).unwrap();
     // let mut img = image::load_from_memory(&image_data).unwrap();
     println!("read time: {:.2?}", read_s.elapsed());
 
@@ -47,7 +48,7 @@ pub fn scale_image(image_data: &Vec<u8>, span: bool, display_info: &DisplayInfo)
         .expect("Unable to write data");
     println!("write time: {:.2?}", write_s.elapsed());
 
-    return bytes;
+    bytes
 }
 
 fn calculate_display_ratio(span: bool, display_info: &&DisplayInfo) -> f32 {
@@ -56,21 +57,20 @@ fn calculate_display_ratio(span: bool, display_info: &&DisplayInfo) -> f32 {
     if span { display_width = get_width(&display_info.total_resolution); }
     if span { display_height = get_height(&display_info.total_resolution); }
     println!("target display reso: {}x{}", display_width, display_height);
-    return display_width as f32 / display_height as f32;
+    display_width as f32 / display_height as f32
 }
 
-fn get_width(resolution_string: &String) -> usize {
-    return resolution_string.split("x")
+fn get_width(resolution_string: &str) -> usize {
+    return resolution_string.split('x')
         .next()
         .expect("wrong display resolution format")
         .parse()
         .unwrap();
 }
 
-fn get_height(resolution_string: &String) -> usize {
-    return resolution_string.split("x")
-        .skip(1)
-        .next()
+fn get_height(resolution_string: &str) -> usize {
+    return resolution_string.split('x')
+        .nth(1)
         .expect("wrong display resolution format")
         .parse().unwrap();
 }
