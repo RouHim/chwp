@@ -1,17 +1,9 @@
-use std::io::BufWriter;
-use std::time::Instant;
-
-use image::{GenericImageView, ImageFormat};
+use image::DynamicImage;
 
 use crate::display::DisplayInfo;
 
-pub fn scale_image(image_data: &[u8], span: bool, display_info: &DisplayInfo) -> Vec<u8> {
-    println!("{} bytes", image_data.len());
-
-    let read_s = Instant::now();
+pub fn scale_image(image_data: &[u8], span: bool, display_info: &DisplayInfo) -> DynamicImage {
     let mut img = image::load_from_memory(image_data).unwrap();
-    // let mut img = image::load_from_memory(&image_data).unwrap();
-    println!("read time: {:.2?}", read_s.elapsed());
 
     let display_ratio = calculate_display_ratio(span, &display_info);
     let img_width = img.width();
@@ -35,20 +27,7 @@ pub fn scale_image(image_data: &[u8], span: bool, display_info: &DisplayInfo) ->
         x_start = (img_width / 2) - (new_image_width / 2);
     }
 
-    println!("Image {}x{}", img_width, img_height);
-    println!("New image {}x{}", new_image_width, new_image_height);
-
-    let crop_s = Instant::now();
-    img = img.crop(x_start, y_start, new_image_width, new_image_height);
-    println!("crop time: {:.2?}", crop_s.elapsed());
-
-    let write_s = Instant::now();
-    let mut bytes: Vec<u8> = Vec::new();
-    img.write_to(&mut bytes, ImageFormat::Jpeg)
-        .expect("Unable to write data");
-    println!("write time: {:.2?}", write_s.elapsed());
-
-    bytes
+    img.crop(x_start, y_start, new_image_width, new_image_height)
 }
 
 fn calculate_display_ratio(span: bool, display_info: &&DisplayInfo) -> f32 {
@@ -56,7 +35,6 @@ fn calculate_display_ratio(span: bool, display_info: &&DisplayInfo) -> f32 {
     let mut display_height = get_height(&display_info.max_single_resolution);
     if span { display_width = get_width(&display_info.total_resolution); }
     if span { display_height = get_height(&display_info.total_resolution); }
-    println!("target display reso: {}x{}", display_width, display_height);
     display_width as f32 / display_height as f32
 }
 

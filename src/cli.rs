@@ -10,8 +10,5 @@ pub fn execute_command(cmd: &String) -> String {
     let stdout = String::from_utf8_lossy(&result.stdout).to_string();
     let stderr = String::from_utf8_lossy(&result.stderr).to_string();
 
-    println!("{}", stdout);
-    println!("{}", stderr);
-
     [stdout, stderr].join("\n")
 }

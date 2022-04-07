@@ -8,7 +8,6 @@ const BASE_URL: &str = "https://pixabay.com/api/?key=15495421-a5108e860086b11edd
 
 pub fn get_random_image(config: &Config, display_info: &DisplayInfo) -> Vec<u8> {
     let image_url = build_image_url(config, display_info);
-    println!("{}", image_url);
     file_receiver::download_data(&image_url)
 }
 

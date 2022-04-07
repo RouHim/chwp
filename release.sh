@@ -59,7 +59,7 @@ write_to_version_file() {
   echo "$NEXT_VERSION" >VERSION
 }
 
-# preperation
+# preparation
 build_application
 calculate_next_version
 

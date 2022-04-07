@@ -13,7 +13,7 @@ pub fn set_wallpaper(file_path: &str) {
         "        d.writeConfig(\"Image\", \"file://", file_path, "\");",
         "        d.writeConfig(\"FillMode\", 1);",
         "}'"].join("");
-    cli::execute_command(&change_kde_wallpaper_cmd.to_string());
+    cli::execute_command(&change_kde_wallpaper_cmd);
 }
 
 pub fn set_lockscreen(file_path: &str) {

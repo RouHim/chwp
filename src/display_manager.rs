@@ -1,16 +1,15 @@
 use std::env;
-use std::fs::File;
-use std::io::Write;
 use std::path::Path;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use dirs::home_dir;
+use image::DynamicImage;
 
 use crate::{gnome, kde, xfce};
 use crate::cli::execute_command;
 use crate::config::Config;
 
-pub fn change_wallpaper(image_data: &[u8], config: &Config) {
+pub fn set_wallpaper(image_data: DynamicImage, config: &Config) {
     let display_manager = get_display_manager();
 
     let picture_option = match config.span {
@@ -19,7 +18,7 @@ pub fn change_wallpaper(image_data: &[u8], config: &Config) {
     };
 
     clear_wallpaper_dir();
-    let wallpaper_file_path = persists_to_file(image_data);
+    let wallpaper_file_path = persist_to_file(image_data);
     let wallpaper_file_path_fqdn_string = format!("file://{}", wallpaper_file_path.as_str());
     let wallpaper_file_path_fqdn = wallpaper_file_path_fqdn_string.as_str();
 
@@ -65,10 +64,9 @@ fn clear_wallpaper_dir() {
     std::fs::create_dir_all(&wallpaper_home).expect("wallpaper path creation failed");
 }
 
-fn persists_to_file(image_data: &[u8]) -> String {
+fn persist_to_file(image_data: DynamicImage) -> String {
     let path = build_target_path();
-    let mut target_file = File::create(path.as_str()).expect("Unable to create file");
-    target_file.write_all(image_data).expect("Unable to write data");
+    image_data.save(path.as_str()).expect("Unable to save image");
     path
 }
 

@@ -7,13 +7,13 @@ pkgver=0.0.18
 pkgrel=1
 pkgdesc="Changes the background wallpaper and lockscreen from the command line."
 arch=('x86_64')
-url="https://gitlab.com/rouvenhimmelstein/chwp"
+url="https://github.com/RouHim/chwp"
 license=('GPL3')
 depends=('xrandr')
-makedepends=('git' 'rust')
+makedepends=('git', 'rust')
 provides=('chwp')
 conflicts=('chwp')
-source=("https://gitlab.com/rouvenhimmelstein/chwp/-/archive/${pkgver}/${_gitname}-${pkgver}.tar.gz")
+source=("https://github.com/RouHim/chwp/archive/refs/heads/main.zip")
 sha1sums=('SKIP')
 
 prepare() {

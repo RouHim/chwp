@@ -13,8 +13,6 @@ mod display_manager;
 mod gnome;
 mod xfce;
 mod file_receiver;
-mod pexels;
-
 
 fn main() {
     // get args with app path
@@ -27,7 +25,7 @@ fn main() {
     let display_info = display::get_info();
 
     // retrieve the image data from pixabay
-    let mut image_data = if config::is_url(&config.keyword) {
+    let image_data = if config::is_url(&config.keyword) {
         // Download image from specified url
         file_receiver::download_data(&config.keyword)
     } else if config::is_local_path(&config.keyword) {
@@ -35,13 +33,12 @@ fn main() {
         file_receiver::read_file(&config.keyword)
     } else {
         // Get random image from online resource by keyword
-        // pexels::get_random_image(&config, &display_info)
         pixabay::get_random_image(&config, &display_info)
     };
 
     // scale the image to fit the display
-    image_data = image_edit::scale_image(&image_data, config.span, &display_info);
+    let image = image_edit::scale_image(&image_data, config.span, &display_info);
 
     // change the wallpaper to the scaled image
-    display_manager::change_wallpaper(&image_data, &config);
+    display_manager::set_wallpaper(image, &config);
 }
