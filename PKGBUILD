@@ -1,24 +1,20 @@
 # Maintainer: Rouven Himmelstein <rouvenhimmelstein@gmail.com>
-
 _gitname=chwp
 _cmdname=chwp
 pkgname=${_gitname}-git
+pkgname=chwp-git
 pkgver=0.0.18
 pkgrel=1
 pkgdesc="Changes the background wallpaper and lockscreen from the command line."
-arch=('x86_64')
+arch=('any')
 url="https://github.com/RouHim/chwp"
 license=('GPL3')
-depends=('xrandr')
-makedepends=('git', 'rust')
+depends=('xorg-xrandr')
+makedepends=('git' 'rust')
 provides=('chwp')
 conflicts=('chwp')
 source=("https://github.com/RouHim/chwp/archive/refs/heads/main.zip")
 sha1sums=('SKIP')
-
-prepare() {
-    # prep build
-}
 
 build() {
     cargo build --release
@@ -26,9 +22,9 @@ build() {
 
 package() {
     # install executable
-    chmod +x target/release/${_cmdname}
-    cp target/release/${_cmdname} /usr/local/bin/
+    chmod +x target/release/chwp
+    cp target/release/chwp /usr/local/bin/
 
     # install man page
-    install -D -m755 ${_cmdname}.1 ${pkgdir}/usr/share/man/man1/${_cmdname}.1
+    install -D -m755 chwp.1 ${pkgdir}/usr/share/man/man1/chwp.1
 }
