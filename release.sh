@@ -1,5 +1,4 @@
 #!/bin/sh
-
 AUR_PROJECT_DIR=/home/rouven/projects/chwp-git-aur
 PROJECT_DIR=$(pwd)
 CURRENT_VERSION=$(cat VERSION)
@@ -59,7 +58,7 @@ write_to_version_file() {
   echo "$NEXT_VERSION" >VERSION
 }
 
-# preparation
+# preperation
 build_application
 calculate_next_version
 

@@ -1,8 +1,8 @@
 # Maintainer: Rouven Himmelstein <rouvenhimmelstein@gmail.com>
+
 _gitname=chwp
 _cmdname=chwp
-pkgname=${_gitname}-git
-pkgname=chwp-git
+ pkgname=chwp-git
 pkgver=0.0.18
 pkgrel=1
 pkgdesc="Changes the background wallpaper and lockscreen from the command line."
