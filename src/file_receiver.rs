@@ -7,8 +7,10 @@ use std::path::PathBuf;
 use rand::Rng;
 
 pub fn download_data(request_url: &String) -> Vec<u8> {
-    reqwest::blocking::get(request_url).unwrap()
-        .bytes().unwrap()
+    reqwest::blocking::get(request_url)
+        .unwrap()
+        .bytes()
+        .unwrap()
         .to_vec()
 }
 
@@ -37,7 +39,12 @@ fn read_random_file_from_directory(directory_path: &String) -> Vec<u8> {
 }
 
 fn is_picture(file_path: PathBuf) -> bool {
-    let file_extension = file_path.extension().unwrap().to_str().unwrap().to_lowercase();
+    let file_extension = file_path
+        .extension()
+        .unwrap()
+        .to_str()
+        .unwrap()
+        .to_lowercase();
     file_extension == "png"
         || file_extension == "jpg"
         || file_extension == "bmp"

@@ -23,7 +23,10 @@ pub fn set_lockscreen(file_path: &String) {
         "--group Wallpaper ",
         "--group org.kde.image ",
         "--group General ",
-        "--key Image \"", file_path, "\""
-    ].join("");
+        "--key Image \"",
+        file_path,
+        "\"",
+    ]
+    .join("");
     cli::execute_command(&change_kde_lockscreen_cmd.to_string());
 }

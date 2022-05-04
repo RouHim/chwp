@@ -33,13 +33,18 @@ pub fn scale_image(image_data: Vec<u8>, span: bool, display_info: &DisplayInfo) 
 fn calculate_display_ratio(span: bool, display_info: &&DisplayInfo) -> f32 {
     let mut display_width = get_width(&display_info.max_single_resolution);
     let mut display_height = get_height(&display_info.max_single_resolution);
-    if span { display_width = get_width(&display_info.total_resolution); }
-    if span { display_height = get_height(&display_info.total_resolution); }
+    if span {
+        display_width = get_width(&display_info.total_resolution);
+    }
+    if span {
+        display_height = get_height(&display_info.total_resolution);
+    }
     display_width as f32 / display_height as f32
 }
 
 fn get_width(resolution_string: &str) -> usize {
-    return resolution_string.split('x')
+    return resolution_string
+        .split('x')
         .next()
         .expect("wrong display resolution format")
         .parse()
@@ -47,8 +52,10 @@ fn get_width(resolution_string: &str) -> usize {
 }
 
 fn get_height(resolution_string: &str) -> usize {
-    return resolution_string.split('x')
+    return resolution_string
+        .split('x')
         .nth(1)
         .expect("wrong display resolution format")
-        .parse().unwrap();
+        .parse()
+        .unwrap();
 }

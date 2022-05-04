@@ -3,17 +3,16 @@ extern crate rand;
 
 use std::env;
 
+mod cli;
 mod config;
 mod display;
-mod pixabay;
+mod display_manager;
+mod file_receiver;
+mod gnome;
 mod image_edit;
 mod kde;
-mod cli;
-mod display_manager;
-mod gnome;
+mod pixabay;
 mod xfce;
-mod file_receiver;
-
 
 fn main() {
     // get args with app path

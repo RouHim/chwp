@@ -20,10 +20,7 @@ pub fn parse_cli_args(args: Vec<String>) -> Config {
         choose_random_keyword(keywords)
     };
 
-    Config {
-        span,
-        keyword,
-    }
+    Config { span, keyword }
 }
 
 fn choose_random_keyword(keywords: Vec<String>) -> String {
@@ -36,8 +33,7 @@ fn choose_random_keyword(keywords: Vec<String>) -> String {
 }
 
 fn remove_element(keywords: &mut Vec<String>, term: String) {
-    let index = keywords.iter()
-        .position(|item| *item == term);
+    let index = keywords.iter().position(|item| *item == term);
 
     if let Some(index) = index {
         keywords.remove(index);

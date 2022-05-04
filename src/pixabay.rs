@@ -4,7 +4,8 @@ use crate::config::Config;
 use crate::display::DisplayInfo;
 use crate::file_receiver;
 
-const BASE_URL: &str = "https://pixabay.com/api/?key=15495421-a5108e860086b11eddaea0efa&per_page=25";
+const BASE_URL: &str =
+    "https://pixabay.com/api/?key=15495421-a5108e860086b11eddaea0efa&per_page=25";
 
 pub fn get_image_data(config: &Config, display_info: &DisplayInfo) -> Vec<u8> {
     let image_url = get_image_url(config, display_info);
@@ -17,8 +18,10 @@ fn get_image_url(config: &Config, display_info: &DisplayInfo) -> String {
 
     let value: serde_json::Value = serde_json::from_str(json_string.as_str()).unwrap();
     let images: Vec<&str> = value
-        .get("hits").unwrap()
-        .as_array().unwrap()
+        .get("hits")
+        .unwrap()
+        .as_array()
+        .unwrap()
         .iter()
         .map(|hit| hit.get("imageURL").unwrap().as_str().unwrap())
         .collect();
@@ -56,14 +59,16 @@ fn append_str(base_string: &mut String, str1: &str, str2: &str) {
 }
 
 fn get_width(resolution_string: &str) -> String {
-    return resolution_string.split('x')
+    return resolution_string
+        .split('x')
         .next()
         .expect("wrong display resolution format")
         .to_string();
 }
 
 fn get_height(resolution_string: &str) -> String {
-    return resolution_string.split('x')
+    return resolution_string
+        .split('x')
         .nth(1)
         .expect("wrong display resolution format")
         .to_string();

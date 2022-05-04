@@ -39,16 +39,18 @@ fn is_wayland() -> bool {
 }
 
 fn get_total_resolution() -> String {
-    return
-        if is_display_var_set() {
-            cli::execute_command(
-                &"(xrandr -q|sed -n 's/.*current[ ]\\([0-9]*\\) x \\([0-9]*\\),.*/\\1x\\2/p')".to_string()
-            ).trim().to_string()
-        } else {
-            cli::execute_command(
+    return if is_display_var_set() {
+        cli::execute_command(
+            &"(xrandr -q|sed -n 's/.*current[ ]\\([0-9]*\\) x \\([0-9]*\\),.*/\\1x\\2/p')"
+                .to_string(),
+        )
+        .trim()
+        .to_string()
+    } else {
+        cli::execute_command(
                 &"(DISPLAY=:0 xrandr -q|sed -n 's/.*current[ ]\\([0-9]*\\) x \\([0-9]*\\),.*/\\1x\\2/p')".to_string()
             ).trim().to_string()
-        };
+    };
 }
 
 fn get_max_single_display_resolution() -> String {
@@ -80,12 +82,14 @@ fn multiply_resolution(resolution: &str) -> i32 {
 }
 
 fn get_display_resolutions() -> Vec<String> {
-    let resolutions_string = execute_display_command("xrandr | grep \\* | cut -d' ' -f4".to_string())
-        .trim()
-        .to_string();
+    let resolutions_string =
+        execute_display_command("xrandr | grep \\* | cut -d' ' -f4".to_string())
+            .trim()
+            .to_string();
 
     return if resolutions_string.contains('\n') {
-        resolutions_string.split('\n')
+        resolutions_string
+            .split('\n')
             .map(|s| s.to_string())
             .collect()
     } else {
