@@ -4,9 +4,9 @@ use std::time::{SystemTime, UNIX_EPOCH};
 
 use image::DynamicImage;
 
+use crate::{gnome, kde, xfce};
 use crate::cli::execute_command;
 use crate::config::Config;
-use crate::{gnome, kde, xfce};
 
 pub fn change_wallpaper(image_data: DynamicImage, config: &Config) {
     let display_manager = get_display_manager();
@@ -26,11 +26,19 @@ pub fn change_wallpaper(image_data: DynamicImage, config: &Config) {
             wallpaper_file_path_fqdn,
         );
         gnome::write_settings(
+            &"org.gnome.desktop.background picture-uri-dark".to_string(),
+            wallpaper_file_path_fqdn,
+        );
+        gnome::write_settings(
             &"org.gnome.desktop.background picture-options".to_string(),
             &picture_option,
         );
         gnome::write_settings(
             &"org.gnome.desktop.screensaver picture-uri".to_string(),
+            wallpaper_file_path_fqdn,
+        );
+        gnome::write_settings(
+            &"org.gnome.desktop.screensaver picture-uri-dark".to_string(),
             wallpaper_file_path_fqdn,
         );
         gnome::write_settings(
@@ -110,7 +118,7 @@ fn build_target_path() -> String {
             .to_string(),
         ".jpg".to_string(),
     ]
-    .join("");
+        .join("");
     user_home.push(".wallpaper");
     user_home.push(random_file_name);
     user_home.into_os_string().into_string().unwrap()
