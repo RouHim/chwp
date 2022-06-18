@@ -6,6 +6,7 @@ use std::path::PathBuf;
 
 use rand::Rng;
 
+/// Download an image from a URL
 pub fn download_data(request_url: &String) -> Vec<u8> {
     reqwest::blocking::get(request_url)
         .unwrap()
@@ -14,6 +15,7 @@ pub fn download_data(request_url: &String) -> Vec<u8> {
         .to_vec()
 }
 
+/// Reads image data from a local path
 pub fn read_file(file_path: &String) -> Vec<u8> {
     if metadata(file_path).unwrap().is_file() {
         fs::read(file_path).expect("Unable to read file")
@@ -22,6 +24,9 @@ pub fn read_file(file_path: &String) -> Vec<u8> {
     }
 }
 
+/// Reads a random image from a directory
+/// If the directory is empty, returns an empty vector
+/// If the directory is not empty, returns a random image
 fn read_random_file_from_directory(directory_path: &String) -> Vec<u8> {
     let paths = fs::read_dir(directory_path).unwrap();
 
@@ -38,6 +43,8 @@ fn read_random_file_from_directory(directory_path: &String) -> Vec<u8> {
     return read_file(images.get(random_index).unwrap());
 }
 
+/// Check if a file is an image
+/// Currently only checks if the file extension is jpg, jpeg, png, or bmp
 fn is_picture(file_path: PathBuf) -> bool {
     let file_extension = file_path
         .extension()

@@ -2,11 +2,17 @@ use std::path::Path;
 
 use rand::Rng;
 
+/// Holds the application configuration
 pub struct Config {
     pub span: bool,
     pub keyword: String,
 }
 
+/// Parse the CLI arguments
+/// # Arguments
+/// * `args` - The CLI arguments
+/// # Returns
+/// The parsed configuration
 pub fn parse_cli_args(args: Vec<String>) -> Config {
     let span_string = "span".to_string();
     let span = args.contains(&span_string);
@@ -23,6 +29,11 @@ pub fn parse_cli_args(args: Vec<String>) -> Config {
     Config { span, keyword }
 }
 
+/// Choose a random keyword from a list of keywords
+/// # Arguments
+/// * `keywords` - The list of keywords
+/// # Returns
+/// A random keyword
 fn choose_random_keyword(keywords: Vec<String>) -> String {
     return if keywords.len() > 1 {
         let random_index = rand::thread_rng().gen_range(0..keywords.len());
@@ -32,6 +43,12 @@ fn choose_random_keyword(keywords: Vec<String>) -> String {
     };
 }
 
+/// Remove an element from a vector
+/// # Arguments
+/// * `keywords` - The list of keywords
+/// * `term` - The element to remove
+/// # Returns
+/// The list of keywords without the removed element
 fn remove_element(keywords: &mut Vec<String>, term: String) {
     let index = keywords.iter().position(|item| *item == term);
 
@@ -40,10 +57,20 @@ fn remove_element(keywords: &mut Vec<String>, term: String) {
     }
 }
 
-pub fn is_url(keyword: &str) -> bool {
-    keyword.starts_with("http") && keyword.contains("://")
+/// Check if a string is a URL
+/// # Arguments
+/// * `to_check` - The string to check
+/// # Returns
+/// True if the string is a URL
+pub fn is_url(to_check: &str) -> bool {
+    to_check.starts_with("http") && to_check.contains("://")
 }
 
-pub fn is_local_path(keyword: &String) -> bool {
-    return Path::new(keyword).exists();
+/// Check if a string is a local path
+/// # Arguments
+/// * `to_check` - The string to check
+/// # Returns
+/// True if the string is a local path
+pub fn is_local_path(to_check: &String) -> bool {
+    return Path::new(to_check).exists();
 }
