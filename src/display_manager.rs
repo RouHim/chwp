@@ -4,10 +4,15 @@ use std::time::{SystemTime, UNIX_EPOCH};
 
 use image::DynamicImage;
 
-use crate::{gnome, kde, xfce};
 use crate::cli::execute_command;
 use crate::config::Config;
+use crate::{gnome, kde, xfce};
 
+/// Changes the wallpaper to the given image
+/// Respective display managers are called to change the wallpaper
+/// # Arguments
+/// * `image` - The image to set as the wallpaper
+/// * `config` - The configuration to use
 pub fn change_wallpaper(image_data: DynamicImage, config: &Config) {
     let display_manager = get_display_manager();
 
@@ -85,6 +90,7 @@ pub fn change_wallpaper(image_data: DynamicImage, config: &Config) {
     }
 }
 
+/// Gets the display manager
 fn get_display_manager() -> String {
     return env::var("XDG_CURRENT_DESKTOP")
         .unwrap()
@@ -92,6 +98,7 @@ fn get_display_manager() -> String {
         .to_lowercase();
 }
 
+/// Clears the wallpaper directory
 fn clear_wallpaper_dir() {
     let path: PathBuf = [dirs::home_dir().unwrap().to_str().unwrap(), ".wallpaper"]
         .iter()
@@ -100,6 +107,10 @@ fn clear_wallpaper_dir() {
     std::fs::create_dir_all(&path).expect("wallpaper path creation failed");
 }
 
+/// Stores the image to a file and returns the path to the file
+/// # Arguments
+/// * `image` - The image to store
+/// # Returns the path to the file
 fn persist_to_file(image_data: DynamicImage) -> String {
     let path = build_target_path();
     image_data
@@ -108,6 +119,8 @@ fn persist_to_file(image_data: DynamicImage) -> String {
     path
 }
 
+/// Builds the path to the wallpaper file
+/// The path is based on the current time
 fn build_target_path() -> String {
     let mut user_home = dirs::home_dir().unwrap();
     let random_file_name = [
@@ -118,7 +131,7 @@ fn build_target_path() -> String {
             .to_string(),
         ".jpg".to_string(),
     ]
-        .join("");
+    .join("");
     user_home.push(".wallpaper");
     user_home.push(random_file_name);
     user_home.into_os_string().into_string().unwrap()

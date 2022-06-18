@@ -2,6 +2,7 @@ use std::env;
 
 use crate::cli;
 
+/// Container that holds information about the display
 pub struct DisplayInfo {
     pub count: i8,
     pub resolutions: Vec<String>,
@@ -9,6 +10,7 @@ pub struct DisplayInfo {
     pub max_single_resolution: String,
 }
 
+/// Gets the current display information
 pub fn get_info() -> DisplayInfo {
     let resolutions = get_display_resolutions();
     let max_single_resolution = get_max_single_display_resolution();
@@ -22,6 +24,8 @@ pub fn get_info() -> DisplayInfo {
     }
 }
 
+/// Checks if the session is running on wayland
+/// # Returns true if the session is running on wayland
 fn is_wayland() -> bool {
     let xdg_session_type = env::var("XDG_SESSION_TYPE");
     if xdg_session_type.is_err() {
@@ -38,6 +42,9 @@ fn is_wayland() -> bool {
     panic!("Can't identify XDG_SESSION_TYPE");
 }
 
+/// Gets the total display resolutions
+/// # Returns the total display resolutions
+/// # Example
 fn get_total_resolution() -> String {
     return if is_display_var_set() {
         cli::execute_command(
@@ -48,11 +55,13 @@ fn get_total_resolution() -> String {
         .to_string()
     } else {
         cli::execute_command(
-                &"(DISPLAY=:0 xrandr -q|sed -n 's/.*current[ ]\\([0-9]*\\) x \\([0-9]*\\),.*/\\1x\\2/p')".to_string()
-            ).trim().to_string()
+            &"(DISPLAY=:0 xrandr -q|sed -n 's/.*current[ ]\\([0-9]*\\) x \\([0-9]*\\),.*/\\1x\\2/p')".to_string()
+        ).trim().to_string()
     };
 }
 
+/// Gets the maximum resolution of a single display
+/// # Returns the maximum resolution of a single display
 fn get_max_single_display_resolution() -> String {
     let resolutions = get_display_resolutions();
     let mut max_resolution = 0;
@@ -70,10 +79,25 @@ fn get_max_single_display_resolution() -> String {
     resolution_string
 }
 
+/// Multiplies the resolution of all displays
+/// # Arguments
+/// * `resolution_string` - The resolution to multiply
+/// # Returns the multiplied resolution
+/// # Example
+/// ```
+/// use image_edit::multiply_resolution;
+/// use display::DisplayInfo;
+///   let display_info = DisplayInfo {
+///   width: 1920,
+///  height: 1080,
+/// };
+///  let display_ratio = multiply_resolution(&display_info.max_single_resolution);
+/// assert_eq!(display_ratio, 1920 * 1080);
+/// ```
 fn multiply_resolution(resolution: &str) -> i32 {
     let mut multiply = 1;
 
-    resolution
+    let _ = resolution
         .split('x')
         .map(|s| s.parse::<i32>().unwrap())
         .for_each(|n| multiply *= n);
@@ -81,6 +105,7 @@ fn multiply_resolution(resolution: &str) -> i32 {
     multiply
 }
 
+/// Gets the current display resolutions
 fn get_display_resolutions() -> Vec<String> {
     let resolutions_string =
         execute_display_command("xrandr | grep \\* | cut -d' ' -f4".to_string())
@@ -97,6 +122,7 @@ fn get_display_resolutions() -> Vec<String> {
     };
 }
 
+/// Checks if the DISPLAY variable is set and executes a command
 fn execute_display_command(cmd: String) -> String {
     if is_display_var_set() {
         cli::execute_command(&cmd)
@@ -107,10 +133,11 @@ fn execute_display_command(cmd: String) -> String {
     }
 }
 
+/// Checks if the DISPLAY or WAYLAND_DISPLAY variable is set
 fn is_display_var_set() -> bool {
-    return if is_wayland() {
+    if is_wayland() {
         env::var("WAYLAND_DISPLAY").is_ok()
     } else {
         env::var("DISPLAY").is_ok()
-    };
+    }
 }
