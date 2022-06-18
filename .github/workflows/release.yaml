@@ -1,0 +1,155 @@
+name: CI/CD
+on:
+  push:
+  pull_request:
+    types:
+      - opened
+  workflow_dispatch: # allow manual execution
+
+jobs:
+
+  check-repo:
+    name: Check git repository
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          format: 'table'
+          exit-code: '1'
+          ignore-unfixed: true
+          severity: 'CRITICAL,HIGH'
+
+  check-code-style:
+    name: Check code style
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+
+      - uses: Swatinem/rust-cache@v1 # use /rust/cargo caching
+
+      - name: Check the code style
+        run: cargo fmt --all -- --check
+
+  check-code:
+    name: Check rust code
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+
+      - uses: Swatinem/rust-cache@v1 # use /rust/cargo caching
+
+      - name: Verify code
+        run: cargo clippy
+
+  test:
+    name: Run application tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+
+      - uses: Swatinem/rust-cache@v1 # use /rust/cargo caching
+
+      - name: Test code
+        run: cargo test
+
+  check-unused-dependencies:
+    name: Check for unused deps
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: nightly
+
+      - uses: Swatinem/rust-cache@v1 # use /rust/cargo caching
+        continue-on-error: true # upload cache even if there are errors in this step
+
+      - name: Install cargo-udeps
+        run: cargo install cargo-udeps --locked
+
+      - name: Analyze dependencies
+        run: cargo +nightly udeps
+
+  build:
+    name: Build executable
+    needs: [ check-repo, check-code-style, check-code, test ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: default
+          toolchain: stable
+
+      - uses: Swatinem/rust-cache@v1 # use /rust/cargo caching
+
+      - name: Build application
+        run: cargo build --release
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: chwp-x64
+          path: target/release/chwp
+
+  publish-crates-io:
+    name: Publish on crates.io
+    needs: [ build ]
+    runs-on: ubuntu-latest
+    if: github.ref_name == 'main' # only publish if the branch is main
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: default
+          toolchain: stable
+
+      - uses: Swatinem/rust-cache@v1 # use /rust/cargo caching
+
+      - name: Download previous built application
+        uses: actions/download-artifact@v3
+        with:
+          name: chwp-x64
+          path: .
+
+      - name: Publish on crates.io
+        run: |
+          cargo install cargo-edit
+          cargo set-version 1."$GITHUB_RUN_NUMBER".0
+          cargo publish --token ${{ secrets.CRATES_IO_TOKEN }} --allow-dirty
