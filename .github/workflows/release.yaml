@@ -177,13 +177,12 @@ jobs:
           cd chwp-aur
           sed -i "s/^pkgver=.*/pkgver=1.$GITHUB_RUN_NUMBER.0/" PKGBUILD
 
-      - name: Makepkg Build and Check
-        id: makepkg
-        uses: edlanglois/pkgbuild-action@v1
-        with:
-          pkgdir: chwp-aur
-          makepkgArgs: --printsrcinfo
-      - name: Upload to AUR
+      - name: Create SRCINFO
+        run: |
+          cd chwp-aur
+          docker run -v $PWD:/pkg -w /pkg rouhim/archlinux-binutils makepkg --printsrcinfo > .SRCINFO
+
+      - name: Push to AUR
         run: |
           cd chwp-aur
           git commit -am "v1.$GITHUB_RUN_NUMBER.0"
