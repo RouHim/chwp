@@ -125,11 +125,6 @@ jobs:
           name: chwp-x64
           path: target/release/chwp
 
-      - name: debug
-        run: |
-          id
-          cd ~ && pwd          
-
   publish-crates-io:
     name: Publish on crates.io
     needs: [ build ]
@@ -185,7 +180,7 @@ jobs:
       - name: Create SRCINFO
         run: |
           cd chwp-aur
-          docker run -v $PWD:/pkg -w /pkg -u 1000 rouhim/archlinux-binutils makepkg --printsrcinfo > .SRCINFO
+          docker run -v $PWD:/pkg -w /pkg -u 1001 rouhim/archlinux-binutils makepkg --printsrcinfo > .SRCINFO
 
       - name: Push to AUR
         run: |
