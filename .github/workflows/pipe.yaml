@@ -136,12 +136,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Create new release tag
-        uses: laputansoft/github-tag-action@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          tag: ${{ v1.$GITHUB_RUN_NUMBER.0 }}
-
       - name: Download previous built application
         uses: actions/download-artifact@v3
         with:
