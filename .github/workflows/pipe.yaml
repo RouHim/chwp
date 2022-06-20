@@ -160,13 +160,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-      - name: Set up AUR environment
+      - name: Set up AUR git environment
         run: |
           mkdir -p ~/.ssh
           ssh-keyscan -t rsa aur.archlinux.org >> ~/.ssh/known_hosts
           echo "${{ secrets.AUR_SSH_PRIVATE_KEY }}" >> ~/.ssh/aur
           chmod 600 ~/.ssh/aur
           echo "${{ secrets.AUR_SSH_CONFIG }}" >> ~/.ssh/config
+          git config --global user.email "${{ secrets.AUR_EMAIL }}"
+          git config --global user.name "${{ secrets.AUR_USERNAME }}"
 
       - name: Checkout AUR repo
         run: |
