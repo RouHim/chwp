@@ -125,6 +125,11 @@ jobs:
           name: chwp-x64
           path: target/release/chwp
 
+      - name: debug
+        run: |
+          id
+          cd ~ && pwd          
+
   publish-crates-io:
     name: Publish on crates.io
     needs: [ build ]
