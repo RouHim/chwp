@@ -1,5 +1,5 @@
 use std::env;
-use std::path::{Path, PathBuf};
+use std::path::Path;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use image::DynamicImage;
@@ -100,11 +100,9 @@ fn get_display_manager() -> String {
 
 /// Clears the wallpaper directory
 fn clear_wallpaper_dir() {
-    let path: PathBuf = [dirs::home_dir().unwrap().to_str().unwrap(), ".wallpaper"]
-        .iter()
-        .collect();
-    let _ = std::fs::remove_dir_all(&path);
-    std::fs::create_dir_all(&path).expect("wallpaper path creation failed");
+    let wallpaper_dir = dirs::home_dir().unwrap().join(".cache").join("chwp");
+    let _ = std::fs::remove_dir_all(&wallpaper_dir);
+    std::fs::create_dir_all(&wallpaper_dir).expect("wallpaper path creation failed");
 }
 
 /// Stores the image to a file and returns the path to the file
@@ -122,17 +120,19 @@ fn persist_to_file(image_data: DynamicImage) -> String {
 /// Builds the path to the wallpaper file
 /// The path is based on the current time
 fn build_target_path() -> String {
-    let mut user_home = dirs::home_dir().unwrap();
-    let random_file_name = [
-        SystemTime::now()
-            .duration_since(UNIX_EPOCH)
-            .unwrap()
-            .as_millis()
-            .to_string(),
-        ".jpg".to_string(),
-    ]
-        .join("");
-    user_home.push(".wallpaper");
-    user_home.push(random_file_name);
-    user_home.into_os_string().into_string().unwrap()
+    let current_millis = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .unwrap()
+        .as_millis()
+        .to_string();
+    let random_file_name = format!("{}.jpg", current_millis);
+
+    dirs::home_dir()
+        .unwrap()
+        .join(".cache")
+        .join("chwp")
+        .join(random_file_name)
+        .into_os_string()
+        .into_string()
+        .unwrap()
 }
