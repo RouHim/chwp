@@ -169,7 +169,8 @@ jobs:
 
       - name: Checkout AUR repo
         run: |
-          git clone
+          git clone ssh://aur@aur.archlinux.org/chwp-git.git
+          cd chwp-git
 
       - name: Set version to PKGBUILD
         run: |
