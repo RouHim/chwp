@@ -103,7 +103,7 @@ fn clear_wallpaper_dir() {
     let path: PathBuf = [dirs::home_dir().unwrap().to_str().unwrap(), ".wallpaper"]
         .iter()
         .collect();
-    std::fs::remove_dir_all(&path).expect("wallpaper cleanup failed");
+    let _ = std::fs::remove_dir_all(&path);
     std::fs::create_dir_all(&path).expect("wallpaper path creation failed");
 }
 
@@ -131,7 +131,7 @@ fn build_target_path() -> String {
             .to_string(),
         ".jpg".to_string(),
     ]
-    .join("");
+        .join("");
     user_home.push(".wallpaper");
     user_home.push(random_file_name);
     user_home.into_os_string().into_string().unwrap()
