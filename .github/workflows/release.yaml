@@ -153,3 +153,32 @@ jobs:
           cargo install cargo-edit
           cargo set-version 1."$GITHUB_RUN_NUMBER".0
           cargo publish --token ${{ secrets.CRATES_IO_TOKEN }} --allow-dirty
+
+  publish-aur:
+    name: Publish on AUR
+    needs: [ publish-crates-io ]
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Set up AUR environment
+        run: |
+          echo "${{ secrets.AUR_SSH_PRIVATE_KEY }}" >> ~/.ssh/aur
+          chmod 600 ~/.ssh/aur
+          echo "${{ secrets.AUR_SSH_CONFIG }}" >> ~/.ssh/config
+
+      - name: Checkout AUR repo
+        run: |
+          git clone
+
+      - name: Set version to PKGBUILD
+        run: |
+          sed -i "s/^pkgver=.*/pkgver=1.$GITHUB_RUN_NUMBER.0/" PKGBUILD
+
+      - name: Generate SRCINFO
+        run: |
+          makepkg --printsrcinfo > .SRCINFO
+
+      - name: Upload to AUR
+        run: |
+          git commit -am "v1.$GITHUB_RUN_NUMBER.0"
+          git push
