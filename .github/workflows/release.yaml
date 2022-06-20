@@ -182,8 +182,9 @@ jobs:
         uses: edlanglois/pkgbuild-action@v1
         with:
           pkgdir: chwp-aur
-
+          makepkgArgs: --printsrcinfo
       - name: Upload to AUR
         run: |
+          cd chwp-aur
           git commit -am "v1.$GITHUB_RUN_NUMBER.0"
           git push
