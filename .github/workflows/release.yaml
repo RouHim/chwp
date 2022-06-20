@@ -163,6 +163,7 @@ jobs:
       - name: Set up AUR environment
         run: |
           mkdir -p ~/.ssh
+          ssh-keyscan -t rsa aur.archlinux.org >> ~/.ssh/known_hosts
           echo "${{ secrets.AUR_SSH_PRIVATE_KEY }}" >> ~/.ssh/aur
           chmod 600 ~/.ssh/aur
           echo "${{ secrets.AUR_SSH_CONFIG }}" >> ~/.ssh/config
