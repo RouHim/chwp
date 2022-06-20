@@ -180,7 +180,7 @@ jobs:
       - name: Create SRCINFO
         run: |
           cd chwp-aur
-          docker run -v $PWD:/pkg -w /pkg rouhim/archlinux-binutils makepkg --printsrcinfo > .SRCINFO
+          docker run -v $PWD:/pkg -w /pkg -u 1000 rouhim/archlinux-binutils makepkg --printsrcinfo > .SRCINFO
 
       - name: Push to AUR
         run: |
