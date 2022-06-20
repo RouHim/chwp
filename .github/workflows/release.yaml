@@ -170,11 +170,11 @@ jobs:
 
       - name: Checkout AUR repo
         run: |
-          git clone ssh://aur@aur.archlinux.org/chwp-git.git
-          cd chwp-git
+          git clone ssh://aur@aur.archlinux.org/chwp-git.git chwp-aur
 
       - name: Set version to PKGBUILD
         run: |
+          cd chwp-aur
           sed -i "s/^pkgver=.*/pkgver=1.$GITHUB_RUN_NUMBER.0/" PKGBUILD
 
       - name: Generate SRCINFO
