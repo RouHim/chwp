@@ -145,8 +145,8 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           artifacts: "chwp-linux-x86_64"
-          name: "Release v1."$GITHUB_RUN_NUMBER".0"
-          omitBody: "true"
+          name: "Release Release v1.$GITHUB_RUN_NUMBER.0"
+          omitBody: true
 
   publish-crates-io:
     name: Publish on crates.io
