@@ -178,6 +178,7 @@ jobs:
           sed -i "s/^pkgver=.*/pkgver=1.$GITHUB_RUN_NUMBER.0/" PKGBUILD
 
       - name: Generate SRCINFO
+        uses: mijailr/arch-makepkg-action@v1
         run: |
           makepkg --printsrcinfo > .SRCINFO
 
