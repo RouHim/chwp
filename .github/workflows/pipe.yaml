@@ -148,8 +148,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: "v1.${GITHUB_RUN_NUMBER}.0"
-          release_name: "Release 1.${GITHUB_RUN_NUMBER}.0"
+          tag_name: v1.${GITHUB_RUN_NUMBER}.0
+          release_name: Release 1.${GITHUB_RUN_NUMBER}.0
           draft: false
           prerelease: false
 
