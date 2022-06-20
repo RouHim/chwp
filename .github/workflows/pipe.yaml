@@ -117,13 +117,35 @@ jobs:
       - uses: Swatinem/rust-cache@v1 # use /rust/cargo caching
 
       - name: Build application
-        run: cargo build --release
+        run: |
+          cargo build --release --target x86_64-unknown-linux-gnu
+          cp target/x86_64-unknown-linux-gnu/release/chwp ./chwp-linux-x86_64
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
-          name: chwp-x64
-          path: target/release/chwp
+          name: chwp-linux-x86_64
+          path: chwp-linux-x86_64
+
+  github-release:
+    runs-on: ubuntu-latest
+    needs: [ build ]
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Download previous built application
+        uses: actions/download-artifact@v3
+        with:
+          name: chwp-linux-x86_64
+          path: .
+
+      - uses: ncipollo/release-action@v1
+        with:
+          artifacts: "chwp-linux-x86_64"
+          name: "Release v1."$GITHUB_RUN_NUMBER".0"
+          omitBody: true
 
   publish-crates-io:
     name: Publish on crates.io
@@ -141,12 +163,6 @@ jobs:
           toolchain: stable
 
       - uses: Swatinem/rust-cache@v1 # use /rust/cargo caching
-
-      - name: Download previous built application
-        uses: actions/download-artifact@v3
-        with:
-          name: chwp-x64
-          path: .
 
       - name: Publish on crates.io
         run: |
