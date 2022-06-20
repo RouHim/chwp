@@ -128,6 +128,7 @@ jobs:
           path: chwp-linux-x86_64
 
   github-release:
+    name: Create GitHub release
     runs-on: ubuntu-latest
     needs: [ build ]
     permissions:
@@ -146,6 +147,7 @@ jobs:
         with:
           artifacts: "chwp-linux-x86_64"
           name: "Release Release v1.$GITHUB_RUN_NUMBER.0"
+          commit: true
           omitBody: true
 
   publish-crates-io:
