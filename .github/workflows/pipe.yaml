@@ -141,11 +141,12 @@ jobs:
           name: chwp-linux-x86_64
           path: .
 
-      - uses: ncipollo/release-action@v1
+      - name: Create GitHub release
+        uses: ncipollo/release-action@v1
         with:
           artifacts: "chwp-linux-x86_64"
           name: "Release v1."$GITHUB_RUN_NUMBER".0"
-          omitBody: true
+          omitBody: "true"
 
   publish-crates-io:
     name: Publish on crates.io
