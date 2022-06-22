@@ -147,7 +147,7 @@ jobs:
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VERSION: 1.${GITHUB_RUN_NUMBER}.0
+          VERSION: 1.${{ env.GITHUB_RUN_NUMBER }}.0
         with:
           tag_name: v${{ env.VERSION }}
           release_name: Release ${{ env.VERSION }}
