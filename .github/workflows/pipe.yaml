@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: debug
-      - run: |
+        run: |
           echo $VERSION
           echo ${VERSION}
           echo ${{ env.VERSION }}
