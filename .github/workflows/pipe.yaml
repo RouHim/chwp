@@ -153,8 +153,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v1.$RUN_NUMBER.0
-          release_name: Release 1.$RUN_NUMBER.0
+          tag_name: v1.${{ github.run_number }}.0
+          release_name: Release 1.${{ github.run_number }}.0
           draft: false
           prerelease: false
 
