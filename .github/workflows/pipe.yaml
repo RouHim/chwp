@@ -142,11 +142,6 @@ jobs:
           name: chwp-linux-x86_64
           path: .
 
-      - name: Setup env
-        uses: jwulf/add-env-vars-action@master
-        with:
-          map: '{"RUN_NUMBER": "${{ github.run_number }}"}'
-
       - name: Create GitHub release
         id: create_release
         uses: actions/create-release@v1
