@@ -6,7 +6,19 @@ on:
       - opened
   workflow_dispatch: # allow manual execution
 
+env:
+  VERSION: 1.${{ env.GITHUB_RUN_NUMBER }}.0
+
 jobs:
+
+  debug:
+    name: debug job
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo $VERSION
+          echo ${VERSION}
+          echo ${{ env.VERSION }}
 
   check-repo:
     name: Check git repository
@@ -147,7 +159,6 @@ jobs:
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VERSION: 1.${{ env.GITHUB_RUN_NUMBER }}.0
         with:
           tag_name: v${{ env.VERSION }}
           release_name: Release ${{ env.VERSION }}
@@ -184,7 +195,7 @@ jobs:
       - name: Publish on crates.io
         run: |
           cargo install cargo-edit
-          cargo set-version 1."$GITHUB_RUN_NUMBER".0
+          cargo set-version ${{ env.VERSION }}
           cargo publish --token ${{ secrets.CRATES_IO_TOKEN }} --allow-dirty
 
   publish-aur:
@@ -210,7 +221,7 @@ jobs:
       - name: Set version to PKGBUILD
         run: |
           cd chwp-aur
-          sed -i "s/^pkgver=.*/pkgver=1.$GITHUB_RUN_NUMBER.0/" PKGBUILD
+          sed -i "s/^pkgver=.*/pkgver=${{ env.VERSION }}/" PKGBUILD
 
       - name: Create SRCINFO
         run: |
@@ -220,5 +231,5 @@ jobs:
       - name: Push to AUR
         run: |
           cd chwp-aur
-          git commit -am "v1.$GITHUB_RUN_NUMBER.0"
+          git commit -am "v${{ env.VERSION }}"
           git push
