@@ -8,18 +8,6 @@ on:
 
 jobs:
 
-  debug:
-    name: debug job
-    runs-on: ubuntu-latest
-    env:
-      VERSION: 1.${{ env.GITHUB_RUN_NUMBER }}.0
-    steps:
-
-      - name: debug
-        run: |
-          echo $VERSION
-          env
-
   check-repo:
     name: Check git repository
     runs-on: ubuntu-latest
@@ -160,8 +148,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v${{ env.VERSION }}
-          release_name: Release ${{ env.VERSION }}
+          tag_name: v1.$GITHUB_RUN_NUMBER.0
+          release_name: Release 1.$GITHUB_RUN_NUMBER.0
           draft: false
           prerelease: false
 
@@ -195,7 +183,7 @@ jobs:
       - name: Publish on crates.io
         run: |
           cargo install cargo-edit
-          cargo set-version ${{ env.VERSION }}
+          cargo set-version 1."$GITHUB_RUN_NUMBER".0
           cargo publish --token ${{ secrets.CRATES_IO_TOKEN }} --allow-dirty
 
   publish-aur:
@@ -221,7 +209,7 @@ jobs:
       - name: Set version to PKGBUILD
         run: |
           cd chwp-aur
-          sed -i "s/^pkgver=.*/pkgver=${{ env.VERSION }}/" PKGBUILD
+          sed -i "s/^pkgver=.*/pkgver=1.$GITHUB_RUN_NUMBER.0/" PKGBUILD
 
       - name: Create SRCINFO
         run: |
@@ -231,5 +219,5 @@ jobs:
       - name: Push to AUR
         run: |
           cd chwp-aur
-          git commit -am "v${{ env.VERSION }}"
+          git commit -am "v1.$GITHUB_RUN_NUMBER.0"
           git push
