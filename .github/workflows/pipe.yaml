@@ -15,6 +15,7 @@ jobs:
     name: debug job
     runs-on: ubuntu-latest
     steps:
+      - name: debug
       - run: |
           echo $VERSION
           echo ${VERSION}
