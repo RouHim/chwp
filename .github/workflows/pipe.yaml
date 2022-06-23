@@ -142,15 +142,20 @@ jobs:
           name: chwp-linux-x86_64
           path: .
 
+      - name: debug
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: env
+
       - name: Create GitHub release
         id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_RUN_NUMBER: ${{ env.GITHUB_RUN_NUMBER }}
+          VERSION: ${{ env.GITHUB_RUN_NUMBER }}
         with:
-          tag_name: v1.$GITHUB_RUN_NUMBER.0
-          release_name: Release 1.$GITHUB_RUN_NUMBER.0
+          tag_name: v1.$VERSION.0
+          release_name: Release 1.$VERSION.0
           draft: false
           prerelease: false
 
