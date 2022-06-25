@@ -186,8 +186,8 @@ jobs:
           cargo set-version 1."$GITHUB_RUN_NUMBER".0
           cargo publish --token ${{ secrets.CRATES_IO_TOKEN }} --allow-dirty
 
-  publish-aur:
-    name: Publish on AUR
+  publish-aur-git:
+    name: Publish AUR Git package
     needs: [ publish-crates-io ]
     runs-on: ubuntu-latest
     steps:
@@ -205,6 +205,42 @@ jobs:
       - name: Checkout AUR repo
         run: |
           git clone ssh://aur@aur.archlinux.org/chwp-git.git chwp-aur
+
+      - name: Set version to PKGBUILD
+        run: |
+          cd chwp-aur
+          sed -i "s/^pkgver=.*/pkgver=1.$GITHUB_RUN_NUMBER.0/" PKGBUILD
+
+      - name: Create SRCINFO
+        run: |
+          cd chwp-aur
+          docker run -v $PWD:/pkg -w /pkg -u 1001 rouhim/archlinux-binutils makepkg --printsrcinfo > .SRCINFO
+
+      - name: Push to AUR
+        run: |
+          cd chwp-aur
+          git commit -am "v1.$GITHUB_RUN_NUMBER.0"
+          git push
+
+  publish-aur-bin:
+    name: Publish AUR Bin package
+    needs: [ publish-crates-io ]
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Set up AUR git environment
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -t rsa aur.archlinux.org >> ~/.ssh/known_hosts
+          echo "${{ secrets.AUR_SSH_PRIVATE_KEY }}" >> ~/.ssh/aur
+          chmod 600 ~/.ssh/aur
+          echo "${{ secrets.AUR_SSH_CONFIG }}" >> ~/.ssh/config
+          git config --global user.email "${{ secrets.AUR_EMAIL }}"
+          git config --global user.name "${{ secrets.AUR_USERNAME }}"
+
+      - name: Checkout AUR repo
+        run: |
+          git clone ssh://aur@aur.archlinux.org/chwp-bin.git chwp-aur
 
       - name: Set version to PKGBUILD
         run: |
