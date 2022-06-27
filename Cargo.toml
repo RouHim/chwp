@@ -2,7 +2,7 @@
 name = "chwp"
 version = "0.0.0" # will be replaced by the github actoin build script
 authors = ["Rouven Himmelstein <rouven@himmelstein.info>"]
-license = "GPL-3.0-or-later"
+license = "MIT"
 description = "Change your wallpaper from the command line interface."
 readme = "README.md"
 homepage = "https://github.com/RouHim/chwp-rust"
