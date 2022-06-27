@@ -119,13 +119,13 @@ jobs:
       - name: Build application
         run: |
           cargo build --release --target x86_64-unknown-linux-gnu
-          cp target/x86_64-unknown-linux-gnu/release/chwp ./chwp-linux-x86_64
+          cp target/x86_64-unknown-linux-gnu/release/chwp ./chwp-linux-x86-64
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
           name: artifact-linux-x86_64
-          path: chwp-linux-x86_64
+          path: chwp-linux-x86-64
 
   build-deb-package:
     name: Build deb package
@@ -143,7 +143,7 @@ jobs:
       - name: Build deb file
         uses: jiro4989/build-deb-action@v2
         with:
-          package: chwp-linux-x86_64
+          package: chwp-linux-x86-64
           package_root: .
           maintainer: Rouven Himmelstein
           version: ${{ github.run_number }}
@@ -197,8 +197,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: chwp-linux-x86_64
-          asset_name: chwp-linux-x86_64
+          asset_path: chwp-linux-x86-64
+          asset_name: chwp-linux-x86-64
           asset_content_type: application/x-executable
 
       - name: Upload linux-x86_64 debian asset
@@ -208,7 +208,7 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./*.deb
-          asset_name: chwp-linux-x86_64.deb
+          asset_name: chwp-linux-x86-64.deb
           asset_content_type: application/x-executable
 
   publish-crates-io:
