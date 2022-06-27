@@ -144,7 +144,7 @@ jobs:
         uses: jiro4989/build-deb-action@v2
         with:
           package: chwp-linux-x86_64
-          package_root: ./
+          package_root: .
           maintainer: Rouven Himmelstein
           version: ${{ github.run_number }}
           arch: 'amd64'
