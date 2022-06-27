@@ -1,18 +1,16 @@
-extern crate reqwest;
-
 use std::fs;
 use std::fs::metadata;
+use std::io::Read;
 use std::path::PathBuf;
 
 use rand::Rng;
 
 /// Download an image from a URL
-pub fn download_data(request_url: &String) -> Vec<u8> {
-    reqwest::blocking::get(request_url)
-        .unwrap()
-        .bytes()
-        .unwrap()
-        .to_vec()
+pub fn download_data(request_url: &str) -> Vec<u8> {
+    let response = ureq::get(request_url).call().unwrap();
+    let mut bytes: Vec<u8> = Vec::new();
+    response.into_reader().read_to_end(&mut bytes).unwrap();
+    bytes
 }
 
 /// Reads image data from a local path
