@@ -26,7 +26,10 @@ pub fn parse_cli_args(args: Vec<String>) -> Config {
         choose_random_keyword(keywords)
     };
 
-    Config { span, query: keyword }
+    Config {
+        span,
+        query: keyword,
+    }
 }
 
 /// Choose a random keyword from a list of keywords
