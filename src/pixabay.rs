@@ -48,7 +48,7 @@ fn get_image_url(config: &Config, display_info: &DisplayInfo) -> String {
 /// * `url` - The url to download
 /// # Returns
 /// The downloaded string as utf 8
-fn download_as_string(request_url: &String) -> String {
+fn download_as_string(request_url: &str) -> String {
     let data = file_receiver::download_data(request_url);
     String::from_utf8(data).unwrap()
 }
@@ -71,7 +71,7 @@ fn build_request_url(config: &Config, display_info: &DisplayInfo) -> String {
     }
 
     let mut request_url = BASE_URL.to_string();
-    append_str(&mut request_url, "&q=", &config.keyword);
+    append_str(&mut request_url, "&q=", &config.query);
     append_str(&mut request_url, "&min_width=", &target_width);
     append_str(&mut request_url, "&min_height=", &target_height);
 

@@ -25,10 +25,10 @@ fn main() {
     let display_info = display::get_info();
 
     // retrieve the image data from pixabay
-    let image_data = if config::is_url(&config.keyword) {
-        file_receiver::download_data(&config.keyword)
-    } else if config::is_local_path(&config.keyword) {
-        file_receiver::read_file(&config.keyword)
+    let image_data = if config::is_url(&config.query) {
+        file_receiver::download_data(&config.query)
+    } else if config::is_local_path(&config.query) {
+        file_receiver::read_file(&config.query)
     } else {
         pixabay::get_image_data(&config, &display_info)
     };

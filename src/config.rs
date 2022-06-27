@@ -5,7 +5,7 @@ use rand::Rng;
 /// Holds the application configuration
 pub struct Config {
     pub span: bool,
-    pub keyword: String,
+    pub query: String,
 }
 
 /// Parse the CLI arguments
@@ -26,7 +26,7 @@ pub fn parse_cli_args(args: Vec<String>) -> Config {
         choose_random_keyword(keywords)
     };
 
-    Config { span, keyword }
+    Config { span, query: keyword }
 }
 
 /// Choose a random keyword from a list of keywords
