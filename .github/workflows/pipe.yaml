@@ -124,8 +124,39 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
-          name: chwp-linux-x86_64
+          name: artifact-linux-x86_64
           path: chwp-linux-x86_64
+
+  build-deb-package:
+    name: Build deb package
+    needs: [ build ]
+    runs-on: ubuntu-latest
+    if: github.ref_name == 'main' # only publish if the branch is main
+    steps:
+
+      - name: Download previous built application
+        uses: actions/download-artifact@v3
+        with:
+          name: artifact-linux-x86_64
+          path: .
+
+      - name: Build deb file
+        uses: jiro4989/build-deb-action@v2
+        with:
+          package: chwp-linux-x86_64
+          package_root: ./
+          maintainer: Rouven Himmelstein
+          version: ${{ github.run_number }}
+          arch: 'amd64'
+          depends: 'xrandr'
+          desc: 'Changes the wallpaper from the command line.'
+
+      - name: Upload deb artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: artifact-deb-x86_64
+          path: |
+            ./*.deb
 
   github-release:
     name: Create GitHub release
@@ -140,7 +171,13 @@ jobs:
       - name: Download previous built application
         uses: actions/download-artifact@v3
         with:
-          name: chwp-linux-x86_64
+          name: artifact-linux-x86_64
+          path: .
+
+      - name: Download previous built deb asset
+        uses: actions/download-artifact@v3
+        with:
+          name: artifact-deb-x86_64
           path: .
 
       - name: Create GitHub release
@@ -154,7 +191,7 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: Upload Release Asset
+      - name: Upload plain linux-x86_64 asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -162,6 +199,16 @@ jobs:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: chwp-linux-x86_64
           asset_name: chwp-linux-x86_64
+          asset_content_type: application/x-executable
+
+      - name: Upload linux-x86_64 debian asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./*.deb
+          asset_name: chwp-linux-x86_64.deb
           asset_content_type: application/x-executable
 
   publish-crates-io:
