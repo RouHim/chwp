@@ -161,7 +161,7 @@ jobs:
   github-release:
     name: Create GitHub release
     runs-on: ubuntu-latest
-    needs: [ build ]
+    needs: [ build, build-deb-package ]
     if: github.ref_name == 'main' # only publish if the branch is main
     permissions:
       contents: write
