@@ -272,7 +272,7 @@ jobs:
 
   publish-aur-bin:
     name: Publish AUR Bin package
-    needs: [ publish-crates-io ]
+    needs: [ github-release ]
     runs-on: ubuntu-latest
     steps:
 
