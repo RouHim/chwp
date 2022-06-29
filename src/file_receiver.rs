@@ -14,7 +14,7 @@ pub fn download_data(request_url: &str) -> Vec<u8> {
 }
 
 /// Reads image data from a local path
-pub fn read_file(file_path: &String) -> Vec<u8> {
+pub fn read_file(file_path: &str) -> Vec<u8> {
     if metadata(file_path).unwrap().is_file() {
         fs::read(file_path).expect("Unable to read file")
     } else {
@@ -25,7 +25,7 @@ pub fn read_file(file_path: &String) -> Vec<u8> {
 /// Reads a random image from a directory
 /// If the directory is empty, returns an empty vector
 /// If the directory is not empty, returns a random image
-fn read_random_file_from_directory(directory_path: &String) -> Vec<u8> {
+fn read_random_file_from_directory(directory_path: &str) -> Vec<u8> {
     let paths = fs::read_dir(directory_path).unwrap();
 
     let mut images = vec![];

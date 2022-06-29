@@ -1,4 +1,5 @@
-use std::env;
+use std::fs::DirEntry;
+use std::{env, fs};
 
 use crate::cli;
 
@@ -42,24 +43,6 @@ fn is_wayland() -> bool {
     panic!("Can't identify XDG_SESSION_TYPE");
 }
 
-/// Gets the total display resolutions
-/// # Returns the total display resolutions
-/// # Example
-fn get_total_resolution() -> String {
-    return if is_display_var_set() {
-        cli::execute_command(
-            &"(xrandr -q|sed -n 's/.*current[ ]\\([0-9]*\\) x \\([0-9]*\\),.*/\\1x\\2/p')"
-                .to_string(),
-        )
-        .trim()
-        .to_string()
-    } else {
-        cli::execute_command(
-            &"(DISPLAY=:0 xrandr -q|sed -n 's/.*current[ ]\\([0-9]*\\) x \\([0-9]*\\),.*/\\1x\\2/p')".to_string()
-        ).trim().to_string()
-    };
-}
-
 /// Gets the maximum resolution of a single display
 /// # Returns the maximum resolution of a single display
 fn get_max_single_display_resolution() -> String {
@@ -85,19 +68,13 @@ fn get_max_single_display_resolution() -> String {
 /// # Returns the multiplied resolution
 /// # Example
 /// ```
-/// use image_edit::multiply_resolution;
-/// use display::DisplayInfo;
-///   let display_info = DisplayInfo {
-///   width: 1920,
-///  height: 1080,
-/// };
-///  let display_ratio = multiply_resolution(&display_info.max_single_resolution);
+/// let display_ratio = multiply_resolution("1920x1080");
 /// assert_eq!(display_ratio, 1920 * 1080);
 /// ```
 fn multiply_resolution(resolution: &str) -> i32 {
     let mut multiply = 1;
 
-    let _ = resolution
+    resolution
         .split('x')
         .map(|s| s.parse::<i32>().unwrap())
         .for_each(|n| multiply *= n);
@@ -105,31 +82,74 @@ fn multiply_resolution(resolution: &str) -> i32 {
     multiply
 }
 
-/// Gets the current display resolutions
-fn get_display_resolutions() -> Vec<String> {
-    let resolutions_string =
-        execute_display_command("xrandr | grep \\* | cut -d' ' -f4".to_string())
-            .trim()
-            .to_string();
+/// Gets the total desktop resolution.
+/// # Example Two desktops (1) 1920x1080 (2) 1920x1080 | get_total_resolution() -> "3840x1080"
+pub(crate) fn get_total_resolution() -> String {
+    return execute_display_command(
+        r#"xprop -notype -len 16 -root _NET_DESKTOP_GEOMETRY | cut -c 25-"#,
+    )
+    .replace(", ", "x")
+    .trim()
+    .to_string();
+}
 
-    return if resolutions_string.contains('\n') {
-        resolutions_string
-            .split('\n')
-            .map(|s| s.to_string())
-            .collect()
-    } else {
-        vec![resolutions_string]
-    };
+/// Gets all resolutions
+/// # Example: ["1920x1080", "2560x1440"]
+pub(crate) fn get_display_resolutions() -> Vec<String> {
+    let paths = std::fs::read_dir("/sys/class/drm/").unwrap();
+
+    paths
+        .filter_map(|entry| entry.ok())
+        .filter(|entry| entry.path().is_dir())
+        .filter(is_connected)
+        .filter_map(to_primary_mode)
+        .collect()
+
+    //FIXME: does not work: this way misses the orientation :(
+}
+
+fn to_primary_mode(drm_dir: DirEntry) -> Option<String> {
+    let drm_path = drm_dir.path().read_dir().unwrap();
+    let modes_value = drm_path
+        .filter_map(|entry| entry.ok())
+        .filter(|entry| {
+            entry.path().is_file() && entry.file_name().to_str().unwrap_or("").eq("modes")
+        })
+        .map(|status_file| fs::read_to_string(status_file.path()))
+        .next();
+
+    if let Some(Ok(modes_value)) = modes_value {
+        return modes_value.trim().split('\n').map(|str| str.to_string()).next();
+    }
+
+    return None;
+}
+
+fn is_connected(drm_dir: &DirEntry) -> bool {
+    let drm_path = drm_dir.path().read_dir().unwrap();
+    let status_value = drm_path
+        .filter_map(|entry| entry.ok())
+        .filter(|entry| {
+            entry.path().is_file() && entry.file_name().to_str().unwrap_or("").eq("status")
+        })
+        .map(|status_file| fs::read_to_string(status_file.path()))
+        .next();
+
+    if let Some(Ok(status_value)) = status_value {
+        return status_value.trim().eq("connected");
+    }
+
+    false
 }
 
 /// Checks if the DISPLAY variable is set and executes a command
-fn execute_display_command(cmd: String) -> String {
+fn execute_display_command(cmd: &str) -> String {
     if is_display_var_set() {
-        cli::execute_command(&cmd)
+        cli::execute_command(cmd)
     } else if is_wayland() {
-        cli::execute_command(&(String::from("WAYLAND_DISPLAY=:wayland-0 ") + &cmd))
+        cli::execute_command(format!("WAYLAND_DISPLAY=:wayland-0 {cmd}").as_str())
     } else {
-        cli::execute_command(&(String::from("DISPLAY=:0 ") + &cmd))
+        cli::execute_command(format!("DISPLAY=:0  {cmd}").as_str())
     }
 }
 

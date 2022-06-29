@@ -74,6 +74,6 @@ pub fn is_url(to_check: &str) -> bool {
 /// * `to_check` - The string to check
 /// # Returns
 /// True if the string is a local path
-pub fn is_local_path(to_check: &String) -> bool {
+pub fn is_local_path(to_check: &str) -> bool {
     return Path::new(to_check).exists();
 }

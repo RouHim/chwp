@@ -13,7 +13,7 @@ use std::process::Command;
 /// let output = execute_command("echo hello");
 /// assert_eq!(output, "hello\n");
 /// ```
-pub fn execute_command(cmd: &String) -> String {
+pub fn execute_command(cmd: &str) -> String {
     let result = Command::new("bash")
         .arg("-c")
         .arg(cmd)

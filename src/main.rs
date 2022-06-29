@@ -14,6 +14,9 @@ mod kde;
 mod pixabay;
 mod xfce;
 
+#[cfg(test)]
+mod display_test;
+
 fn main() {
     // get args with app path
     let args: Vec<String> = env::args().skip(1).collect();

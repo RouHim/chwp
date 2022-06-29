@@ -27,53 +27,53 @@ pub fn change_wallpaper(image_data: DynamicImage, config: &Config) {
 
     if display_manager.contains("gnome") {
         gnome::write_settings(
-            &"org.gnome.desktop.background picture-uri".to_string(),
+            "org.gnome.desktop.background picture-uri",
             wallpaper_file_path_fqdn,
         );
         gnome::write_settings(
-            &"org.gnome.desktop.background picture-uri-dark".to_string(),
+            "org.gnome.desktop.background picture-uri-dark",
             wallpaper_file_path_fqdn,
         );
         gnome::write_settings(
-            &"org.gnome.desktop.background picture-options".to_string(),
+            "org.gnome.desktop.background picture-options",
             &picture_option,
         );
         gnome::write_settings(
-            &"org.gnome.desktop.screensaver picture-uri".to_string(),
+            "org.gnome.desktop.screensaver picture-uri",
             wallpaper_file_path_fqdn,
         );
         gnome::write_settings(
-            &"org.gnome.desktop.screensaver picture-uri-dark".to_string(),
+            "org.gnome.desktop.screensaver picture-uri-dark",
             wallpaper_file_path_fqdn,
         );
         gnome::write_settings(
-            &"org.gnome.desktop.screensaver picture-options".to_string(),
+            "org.gnome.desktop.screensaver picture-options",
             &picture_option,
         );
     } else if display_manager.contains("cinnamon") {
         gnome::write_settings(
-            &"org.cinnamon.desktop.background picture-uri".to_string(),
+            "org.cinnamon.desktop.background picture-uri",
             wallpaper_file_path_fqdn,
         );
         gnome::write_settings(
-            &"org.cinnamon.desktop.background picture-options".to_string(),
+            "org.cinnamon.desktop.background picture-options",
             &picture_option,
         );
     } else if display_manager.contains("deepin") {
         gnome::write_settings(
-            &"com.deepin.wrap.gnome.desktop.background picture-uri".to_string(),
+            "com.deepin.wrap.gnome.desktop.background picture-uri",
             wallpaper_file_path_fqdn,
         );
         gnome::write_settings(
-            &"com.deepin.wrap.gnome.desktop.background picture-options".to_string(),
+            "com.deepin.wrap.gnome.desktop.background picture-options",
             &picture_option,
         );
         gnome::write_settings(
-            &"com.deepin.wrap.gnome.desktop.screensaver picture-uri".to_string(),
+            "com.deepin.wrap.gnome.desktop.screensaver picture-uri",
             wallpaper_file_path_fqdn,
         );
         gnome::write_settings(
-            &"com.deepin.wrap.gnome.desktop.screensaver picture-options".to_string(),
+            "com.deepin.wrap.gnome.desktop.screensaver picture-options",
             &picture_option,
         );
     } else if display_manager.contains("plasma") || display_manager.contains("kde") {
