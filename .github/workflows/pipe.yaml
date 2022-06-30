@@ -111,6 +111,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Install required dependencies
+        run: sudo apt update && sudo apt install -y libsdl2-dev libsdl2-2.0-0
+
       - name: Install rust toolchain
         uses: actions-rs/toolchain@v1
         with:
@@ -150,6 +153,7 @@ jobs:
           maintainer: Rouven Himmelstein
           version: ${{ github.run_number }}
           arch: 'amd64'
+          depends: 'libsdl2-2.0-0'
           desc: 'Changes the wallpaper from the command line.'
 
       - name: Upload deb artifact
