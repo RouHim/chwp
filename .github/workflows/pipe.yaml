@@ -67,9 +67,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install required dependencies
-        run: sudo apt update && sudo apt install -y libsdl2-dev libsdl2-2.0-0
-
       - name: Install rust toolchain
         uses: actions-rs/toolchain@v1
         with:
@@ -110,9 +107,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
-      - name: Install required dependencies
-        run: sudo apt update && sudo apt install -y libsdl2-dev libsdl2-2.0-0
 
       - name: Install rust toolchain
         uses: actions-rs/toolchain@v1
