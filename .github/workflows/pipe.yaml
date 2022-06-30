@@ -153,7 +153,6 @@ jobs:
           maintainer: Rouven Himmelstein
           version: ${{ github.run_number }}
           arch: 'amd64'
-          depends: 'libsdl2-2.0-0'
           desc: 'Changes the wallpaper from the command line.'
 
       - name: Upload deb artifact

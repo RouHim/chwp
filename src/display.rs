@@ -85,18 +85,15 @@ pub(crate) fn get_total_resolution() -> String {
 /// Gets all available display resolutions
 /// # Example: ["1920x1080", "2560x1440"]
 pub(crate) fn get_display_resolutions() -> Vec<String> {
-    let video_subsystem = sdl2::init()
-        .unwrap()
-        .video()
-        .expect("Sdl video subsystem could not be loaded");
+    let event_loop = winit::event_loop::EventLoop::new();
 
-    let display_count = video_subsystem
-        .num_video_displays()
-        .expect("Display count could not be detected");
+    let window = winit::window::WindowBuilder::new()
+        .build(&event_loop)
+        .unwrap();
 
-    (0..display_count)
-        .flat_map(|display_index| video_subsystem.display_mode(display_index, 0))
-        .map(|display_mode| format!("{}x{}", display_mode.w, display_mode.h))
+    window
+        .available_monitors()
+        .map(|monitor| format!("{}x{}", monitor.size().width, monitor.size().height))
         .collect()
 }
 

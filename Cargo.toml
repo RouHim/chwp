@@ -17,7 +17,7 @@ rand = "0.8.5"          # Generate random
 image = "0.24.2"        # Image processing (rotate, flip, ...)
 dirs = "4.0.0"          # Platform-specific folder special detection, e.g. temp dir
 ureq = "2.4.0"          # Http client library
-sdl2 = "0.35.2"         # Detect display information
+winit = "0.26.1"
 
 [dev-dependencies]
 assertor = "0.0.1"
