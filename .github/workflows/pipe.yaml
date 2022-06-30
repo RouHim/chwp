@@ -131,7 +131,6 @@ jobs:
     name: Build deb package
     needs: [ build ]
     runs-on: ubuntu-latest
-    if: github.ref_name == 'main' # only publish if the branch is main
     steps:
 
       - name: Download previous built application
@@ -148,7 +147,6 @@ jobs:
           maintainer: Rouven Himmelstein
           version: ${{ github.run_number }}
           arch: 'amd64'
-          depends: 'xrandr'
           desc: 'Changes the wallpaper from the command line.'
 
       - name: Upload deb artifact
@@ -238,6 +236,7 @@ jobs:
     name: Publish AUR Git package
     needs: [ publish-crates-io ]
     runs-on: ubuntu-latest
+    if: github.ref_name == 'main' # only publish if the branch is main
     steps:
 
       - name: Set up AUR git environment
@@ -274,6 +273,7 @@ jobs:
     name: Publish AUR Bin package
     needs: [ github-release ]
     runs-on: ubuntu-latest
+    if: github.ref_name == 'main' # only publish if the branch is main
     steps:
 
       - name: Set up AUR git environment

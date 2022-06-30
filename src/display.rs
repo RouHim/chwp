@@ -1,9 +1,8 @@
-use std::fs::DirEntry;
-use std::{env, fs};
+use std::env;
 
 use crate::cli;
 
-/// Container that holds information about the display
+/// Container that holds information about the display current configuration
 pub struct DisplayInfo {
     pub count: i8,
     pub resolutions: Vec<String>,
@@ -28,19 +27,9 @@ pub fn get_info() -> DisplayInfo {
 /// Checks if the session is running on wayland
 /// # Returns true if the session is running on wayland
 fn is_wayland() -> bool {
-    let xdg_session_type = env::var("XDG_SESSION_TYPE");
-    if xdg_session_type.is_err() {
-        panic!("Can't identify XDG_SESSION_TYPE");
-    }
-
-    let xdg_session_type_value = xdg_session_type.unwrap();
-    if xdg_session_type_value == "x11" {
-        return false;
-    } else if xdg_session_type_value == "wayland" {
-        return true;
-    }
-
-    panic!("Can't identify XDG_SESSION_TYPE");
+    env::var("XDG_SESSION_TYPE")
+        .expect("Can't identify XDG_SESSION_TYPE")
+        .eq("wayland")
 }
 
 /// Gets the maximum resolution of a single display
@@ -93,56 +82,25 @@ pub(crate) fn get_total_resolution() -> String {
     .to_string();
 }
 
-/// Gets all resolutions
+/// Gets all available display resolutions
 /// # Example: ["1920x1080", "2560x1440"]
 pub(crate) fn get_display_resolutions() -> Vec<String> {
-    let paths = std::fs::read_dir("/sys/class/drm/").unwrap();
+    let video_subsystem = sdl2::init()
+        .unwrap()
+        .video()
+        .expect("Sdl video subsystem could not be loaded");
 
-    paths
-        .filter_map(|entry| entry.ok())
-        .filter(|entry| entry.path().is_dir())
-        .filter(is_connected)
-        .filter_map(to_primary_mode)
+    let display_count = video_subsystem
+        .num_video_displays()
+        .expect("Display count could not be detected");
+
+    (0..display_count)
+        .flat_map(|display_index| video_subsystem.display_mode(display_index, 0))
+        .map(|display_mode| format!("{}x{}", display_mode.w, display_mode.h))
         .collect()
-
-    //FIXME: does not work: this way misses the orientation :(
 }
 
-fn to_primary_mode(drm_dir: DirEntry) -> Option<String> {
-    let drm_path = drm_dir.path().read_dir().unwrap();
-    let modes_value = drm_path
-        .filter_map(|entry| entry.ok())
-        .filter(|entry| {
-            entry.path().is_file() && entry.file_name().to_str().unwrap_or("").eq("modes")
-        })
-        .map(|status_file| fs::read_to_string(status_file.path()))
-        .next();
-
-    if let Some(Ok(modes_value)) = modes_value {
-        return modes_value.trim().split('\n').map(|str| str.to_string()).next();
-    }
-
-    return None;
-}
-
-fn is_connected(drm_dir: &DirEntry) -> bool {
-    let drm_path = drm_dir.path().read_dir().unwrap();
-    let status_value = drm_path
-        .filter_map(|entry| entry.ok())
-        .filter(|entry| {
-            entry.path().is_file() && entry.file_name().to_str().unwrap_or("").eq("status")
-        })
-        .map(|status_file| fs::read_to_string(status_file.path()))
-        .next();
-
-    if let Some(Ok(status_value)) = status_value {
-        return status_value.trim().eq("connected");
-    }
-
-    false
-}
-
-/// Checks if the DISPLAY variable is set and executes a command
+/// Ensures that the DISPLAY variable is set and executes a command
 fn execute_display_command(cmd: &str) -> String {
     if is_display_var_set() {
         cli::execute_command(cmd)
@@ -160,4 +118,40 @@ fn is_display_var_set() -> bool {
     } else {
         env::var("DISPLAY").is_ok()
     }
+}
+
+/// Gets the width of a resolution string
+/// # Arguments
+/// * `resolution` - The resolution string
+/// # Returns
+/// The width of the resolution string
+/// # Example
+/// ```
+/// use image_edit::get_width;
+/// assert_eq!(get_width("1920x1080"), 1920);
+/// ```
+pub fn get_width(resolution_string: &str) -> String {
+    return resolution_string
+        .split('x')
+        .next()
+        .expect("wrong display resolution format")
+        .to_string();
+}
+
+/// Gets the height of a resolution string
+/// # Arguments
+/// * `resolution` - The resolution string
+/// # Returns
+/// The height of the resolution string
+/// # Example
+/// ```
+/// use image_edit::get_height;
+/// assert_eq!(get_height("1920x1080"), 1080);
+/// ```
+pub fn get_height(resolution_string: &str) -> String {
+    return resolution_string
+        .split('x')
+        .nth(1)
+        .expect("wrong display resolution format")
+        .to_string();
 }

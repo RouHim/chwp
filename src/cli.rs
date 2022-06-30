@@ -14,7 +14,7 @@ use std::process::Command;
 /// assert_eq!(output, "hello\n");
 /// ```
 pub fn execute_command(cmd: &str) -> String {
-    let result = Command::new("bash")
+    let result = Command::new("sh")
         .arg("-c")
         .arg(cmd)
         .output()

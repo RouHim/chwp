@@ -1,6 +1,6 @@
 use crate::cli;
 
-/// Writes gnome settings
+/// Writes a gnome settings entry
 pub fn write_settings(key: &str, value: &str) {
     if !is_settings_value_equals(key, value) {
         cli::execute_command(format!("gsettings set {key} {value}").as_str());

@@ -7,15 +7,13 @@ mod cli;
 mod config;
 mod display;
 mod display_manager;
-mod file_receiver;
+mod download;
+mod filesystem;
 mod gnome;
-mod image_edit;
+mod image_processor;
 mod kde;
 mod pixabay;
 mod xfce;
-
-#[cfg(test)]
-mod display_test;
 
 fn main() {
     // get args with app path
@@ -29,15 +27,15 @@ fn main() {
 
     // retrieve the image data from pixabay
     let image_data = if config::is_url(&config.query) {
-        file_receiver::download_data(&config.query)
+        download::get_data(&config.query)
     } else if config::is_local_path(&config.query) {
-        file_receiver::read_file(&config.query)
+        filesystem::read_file(&config.query)
     } else {
         pixabay::get_image_data(&config, &display_info)
     };
 
     // scale the image to fit the display
-    let image = image_edit::scale_image(image_data, config.span, &display_info);
+    let image = image_processor::scale_image(image_data, config.span, &display_info);
 
     // change the wallpaper to the scaled image
     display_manager::change_wallpaper(image, &config);
