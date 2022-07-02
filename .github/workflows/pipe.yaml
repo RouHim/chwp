@@ -133,7 +133,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-      - name: Download previous built application
+      - name: Download previously built application
         uses: actions/download-artifact@v3
         with:
           name: artifact-linux-x86_64
@@ -156,10 +156,39 @@ jobs:
           path: |
             ./*.deb
 
+  build-rpm-package:
+    name: Build rpm package
+    needs: [ build ]
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Download previously built application
+        uses: actions/download-artifact@v3
+        with:
+          name: artifact-linux-x86_64
+          path: .
+
+      - name: Build rpm file
+        uses: jiro4989/build-rpm-action@v2
+        with:
+          package: chwp
+          package_root: .
+          maintainer: Rouven Himmelstein
+          version: ${{ github.run_number }}
+          arch: 'amd64'
+          desc: 'Changes the wallpaper from the command line.'
+
+      - name: Upload rpm artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: artifact-rpm-x86_64
+          path: |
+            ./*.rpm
+
   github-release:
     name: Create GitHub release
     runs-on: ubuntu-latest
-    needs: [ build, build-deb-package ]
+    needs: [ build, build-deb-package , build-rpm-package ]
     if: github.ref_name == 'main' # only publish if the branch is main
     permissions:
       contents: write
@@ -176,6 +205,12 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: artifact-deb-x86_64
+          path: .
+
+      - name: Download previous built rpm asset
+        uses: actions/download-artifact@v3
+        with:
+          name: artifact-rpm-x86_64
           path: .
 
       - name: Create GitHub release
@@ -207,6 +242,16 @@ jobs:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: chwp_${{ github.run_number }}_amd64.deb
           asset_name: chwp-linux-x86-64.deb
+          asset_content_type: application/x-executable
+
+      - name: Upload linux-x86_64 rpm asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: chwp_${{ github.run_number }}_amd64.rpm
+          asset_name: chwp-linux-x86-64.rpm
           asset_content_type: application/x-executable
 
   publish-crates-io:
