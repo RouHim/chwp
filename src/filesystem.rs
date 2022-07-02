@@ -1,20 +1,12 @@
 use std::fs;
 use std::fs::metadata;
-use std::io::Read;
 use std::path::PathBuf;
 
 use rand::Rng;
 
-/// Download an image from a URL
-pub fn download_data(request_url: &str) -> Vec<u8> {
-    let response = ureq::get(request_url).call().unwrap();
-    let mut bytes: Vec<u8> = Vec::new();
-    response.into_reader().read_to_end(&mut bytes).unwrap();
-    bytes
-}
-
 /// Reads image data from a local path
-pub fn read_file(file_path: &String) -> Vec<u8> {
+/// If the provided path is a directory, a random image is chosen
+pub fn read_file(file_path: &str) -> Vec<u8> {
     if metadata(file_path).unwrap().is_file() {
         fs::read(file_path).expect("Unable to read file")
     } else {
@@ -25,7 +17,7 @@ pub fn read_file(file_path: &String) -> Vec<u8> {
 /// Reads a random image from a directory
 /// If the directory is empty, returns an empty vector
 /// If the directory is not empty, returns a random image
-fn read_random_file_from_directory(directory_path: &String) -> Vec<u8> {
+fn read_random_file_from_directory(directory_path: &str) -> Vec<u8> {
     let paths = fs::read_dir(directory_path).unwrap();
 
     let mut images = vec![];
@@ -42,7 +34,7 @@ fn read_random_file_from_directory(directory_path: &String) -> Vec<u8> {
 }
 
 /// Check if a file is an image
-/// Currently only checks if the file extension is jpg, jpeg, png, or bmp
+/// Allowed file extension are: jpg, jpeg, png, bmp, gif, tiff, webp
 fn is_picture(file_path: PathBuf) -> bool {
     let file_extension = file_path
         .extension()
@@ -50,8 +42,12 @@ fn is_picture(file_path: PathBuf) -> bool {
         .to_str()
         .unwrap()
         .to_lowercase();
-    file_extension == "png"
-        || file_extension == "jpg"
-        || file_extension == "bmp"
+
+    file_extension == "jpg"
         || file_extension == "jpeg"
+        || file_extension == "png"
+        || file_extension == "bmp"
+        || file_extension == "gif"
+        || file_extension == "tiff"
+        || file_extension == "webp"
 }

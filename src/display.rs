@@ -2,7 +2,7 @@ use std::env;
 
 use crate::cli;
 
-/// Container that holds information about the display
+/// Container that holds information about the display current configuration
 pub struct DisplayInfo {
     pub count: i8,
     pub resolutions: Vec<String>,
@@ -27,37 +27,9 @@ pub fn get_info() -> DisplayInfo {
 /// Checks if the session is running on wayland
 /// # Returns true if the session is running on wayland
 fn is_wayland() -> bool {
-    let xdg_session_type = env::var("XDG_SESSION_TYPE");
-    if xdg_session_type.is_err() {
-        panic!("Can't identify XDG_SESSION_TYPE");
-    }
-
-    let xdg_session_type_value = xdg_session_type.unwrap();
-    if xdg_session_type_value == "x11" {
-        return false;
-    } else if xdg_session_type_value == "wayland" {
-        return true;
-    }
-
-    panic!("Can't identify XDG_SESSION_TYPE");
-}
-
-/// Gets the total display resolutions
-/// # Returns the total display resolutions
-/// # Example
-fn get_total_resolution() -> String {
-    return if is_display_var_set() {
-        cli::execute_command(
-            &"(xrandr -q|sed -n 's/.*current[ ]\\([0-9]*\\) x \\([0-9]*\\),.*/\\1x\\2/p')"
-                .to_string(),
-        )
-        .trim()
-        .to_string()
-    } else {
-        cli::execute_command(
-            &"(DISPLAY=:0 xrandr -q|sed -n 's/.*current[ ]\\([0-9]*\\) x \\([0-9]*\\),.*/\\1x\\2/p')".to_string()
-        ).trim().to_string()
-    };
+    env::var("XDG_SESSION_TYPE")
+        .expect("Can't identify XDG_SESSION_TYPE")
+        .eq("wayland")
 }
 
 /// Gets the maximum resolution of a single display
@@ -85,19 +57,13 @@ fn get_max_single_display_resolution() -> String {
 /// # Returns the multiplied resolution
 /// # Example
 /// ```
-/// use image_edit::multiply_resolution;
-/// use display::DisplayInfo;
-///   let display_info = DisplayInfo {
-///   width: 1920,
-///  height: 1080,
-/// };
-///  let display_ratio = multiply_resolution(&display_info.max_single_resolution);
+/// let display_ratio = multiply_resolution("1920x1080");
 /// assert_eq!(display_ratio, 1920 * 1080);
 /// ```
 fn multiply_resolution(resolution: &str) -> i32 {
     let mut multiply = 1;
 
-    let _ = resolution
+    resolution
         .split('x')
         .map(|s| s.parse::<i32>().unwrap())
         .for_each(|n| multiply *= n);
@@ -105,31 +71,40 @@ fn multiply_resolution(resolution: &str) -> i32 {
     multiply
 }
 
-/// Gets the current display resolutions
-fn get_display_resolutions() -> Vec<String> {
-    let resolutions_string =
-        execute_display_command("xrandr | grep \\* | cut -d' ' -f4".to_string())
-            .trim()
-            .to_string();
-
-    return if resolutions_string.contains('\n') {
-        resolutions_string
-            .split('\n')
-            .map(|s| s.to_string())
-            .collect()
-    } else {
-        vec![resolutions_string]
-    };
+/// Gets the total desktop resolution.
+/// # Example Two desktops (1) 1920x1080 (2) 1920x1080 | get_total_resolution() -> "3840x1080"
+pub(crate) fn get_total_resolution() -> String {
+    return execute_display_command(
+        r#"xprop -notype -len 16 -root _NET_DESKTOP_GEOMETRY | cut -c 25-"#,
+    )
+    .replace(", ", "x")
+    .trim()
+    .to_string();
 }
 
-/// Checks if the DISPLAY variable is set and executes a command
-fn execute_display_command(cmd: String) -> String {
+/// Gets all available display resolutions
+/// # Example: ["1920x1080", "2560x1440"]
+pub(crate) fn get_display_resolutions() -> Vec<String> {
+    let event_loop = winit::event_loop::EventLoop::new();
+
+    let window = winit::window::WindowBuilder::new()
+        .build(&event_loop)
+        .unwrap();
+
+    window
+        .available_monitors()
+        .map(|monitor| format!("{}x{}", monitor.size().width, monitor.size().height))
+        .collect()
+}
+
+/// Ensures that the DISPLAY variable is set and executes a command
+fn execute_display_command(cmd: &str) -> String {
     if is_display_var_set() {
-        cli::execute_command(&cmd)
+        cli::execute_command(cmd)
     } else if is_wayland() {
-        cli::execute_command(&(String::from("WAYLAND_DISPLAY=:wayland-0 ") + &cmd))
+        cli::execute_command(format!("WAYLAND_DISPLAY=:wayland-0 {cmd}").as_str())
     } else {
-        cli::execute_command(&(String::from("DISPLAY=:0 ") + &cmd))
+        cli::execute_command(format!("DISPLAY=:0  {cmd}").as_str())
     }
 }
 
@@ -140,4 +115,40 @@ fn is_display_var_set() -> bool {
     } else {
         env::var("DISPLAY").is_ok()
     }
+}
+
+/// Gets the width of a resolution string
+/// # Arguments
+/// * `resolution` - The resolution string
+/// # Returns
+/// The width of the resolution string
+/// # Example
+/// ```
+/// use image_edit::get_width;
+/// assert_eq!(get_width("1920x1080"), 1920);
+/// ```
+pub fn get_width(resolution_string: &str) -> String {
+    return resolution_string
+        .split('x')
+        .next()
+        .expect("wrong display resolution format")
+        .to_string();
+}
+
+/// Gets the height of a resolution string
+/// # Arguments
+/// * `resolution` - The resolution string
+/// # Returns
+/// The height of the resolution string
+/// # Example
+/// ```
+/// use image_edit::get_height;
+/// assert_eq!(get_height("1920x1080"), 1080);
+/// ```
+pub fn get_height(resolution_string: &str) -> String {
+    return resolution_string
+        .split('x')
+        .nth(1)
+        .expect("wrong display resolution format")
+        .to_string();
 }
