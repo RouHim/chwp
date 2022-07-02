@@ -179,7 +179,7 @@ jobs:
           desc: 'Changes the wallpaper from the command line.'
 
       - name: Rename rpm file
-        run: mv *.rpm chwp-linux-x86-64.deb
+        run: mv *.rpm chwp-linux-x86-64.rpm
 
       - name: Upload rpm artifact
         uses: actions/upload-artifact@v3
