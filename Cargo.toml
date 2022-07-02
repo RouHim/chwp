@@ -12,16 +12,12 @@ categories = ["command-line-utilities"]
 edition = "2021"
 
 [dependencies]
-serde_json = "1.0.81"   # String to json
+serde_json = "1.0.82"   # String to json
 rand = "0.8.5"          # Generate random
 image = "0.24.2"        # Image processing (rotate, flip, ...)
 dirs = "4.0.0"          # Platform-specific folder special detection, e.g. temp dir
 ureq = "2.4.0"          # Http client library
-winit = "0.26.1"
-
-[dev-dependencies]
-assertor = "0.0.1"
-pretty_assertions = "1.2.1"
+winit = "0.26.1"        # To obtain monitor boundaries
 
 # Strip debug symbols in release mode
 [profile.release]
