@@ -181,7 +181,7 @@ jobs:
       - name: Rename rpm file
         run: |
           rm *debuginfo*.rpm
-          mv *.rpm chwp_${{ github.run_number }}_x86_64
+          mv *.rpm chwp_${{ github.run_number }}_x86_64.rpm
 
       - name: Upload rpm artifact
         uses: actions/upload-artifact@v3
