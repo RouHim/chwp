@@ -181,7 +181,7 @@ jobs:
       - name: Rename rpm file
         run: |
           rm *debuginfo*.rpm
-          mv *.rpm chwp-linux-x86-64.rpm
+          mv *.rpm chwp_${{ github.run_number }}_x86_64
 
       - name: Upload rpm artifact
         uses: actions/upload-artifact@v3
@@ -255,7 +255,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: chwp_${{ github.run_number }}_amd64.rpm
+          asset_path: chwp_${{ github.run_number }}_x86_64
           asset_name: chwp-linux-x86-64.rpm
           asset_content_type: application/x-executable
 
