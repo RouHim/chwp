@@ -175,7 +175,7 @@ jobs:
           package_root: .
           maintainer: Rouven Himmelstein
           version: ${{ github.run_number }}
-          arch: 'amd64'
+          arch: 'x86_64'
           desc: 'Changes the wallpaper from the command line.'
 
       - name: Upload rpm artifact
