@@ -155,6 +155,10 @@ jobs:
           arch: 'amd64'
           desc: 'Changes the wallpaper from the command line.'
 
+      - name: Rename deb file
+        run: |
+          mv *.deb chwp_x86_64.deb
+
       - name: Upload deb artifact
         uses: actions/upload-artifact@v3
         with:
@@ -193,7 +197,7 @@ jobs:
       - name: Rename rpm file
         run: |
           rm *debuginfo*.rpm
-          mv *.rpm chwp_${{ github.run_number }}_x86_64.rpm
+          mv *.rpm chwp_x86_64.rpm
 
       - name: Upload rpm artifact
         uses: actions/upload-artifact@v3
@@ -257,8 +261,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: chwp_*_amd64.deb
-          asset_name: chwp-linux-x86-64.deb
+          asset_path: chwp-x86-64.deb
+          asset_name: chwp-x86-64.deb
           asset_content_type: application/x-executable
 
       - name: Upload linux-x86_64 rpm asset
@@ -267,8 +271,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: chwp_*_x86_64.rpm
-          asset_name: chwp-linux-x86-64.rpm
+          asset_path: chwp-x86-64.rpm
+          asset_name: chwp-x86-64.rpm
           asset_content_type: application/x-executable
 
   publish-crates-io:
