@@ -275,6 +275,14 @@ jobs:
           asset_name: chwp-x86-64.rpm
           asset_content_type: application/x-executable
 
+      - name: Delete old releases
+        uses: dev-drprasad/delete-older-releases@v0.2.0
+        with:
+          keep_latest: 3
+          delete_tags: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   publish-crates-io:
     name: Publish on crates.io
     needs: [ build ]
