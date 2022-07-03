@@ -139,13 +139,19 @@ jobs:
           name: artifact-linux-x86_64
           path: .
 
+      - name: Prepare deb build
+        run: |
+          mkdir -p .pkg/usr/bin/
+          cp chwp-linux-x86-64 .pkg/usr/bin/
+          chmod +x .pkg/usr/bin/chwp-linux-x86-64
+
       - name: Build deb file
         uses: jiro4989/build-deb-action@v2
         with:
           package: chwp
-          package_root: .
+          package_root: .pkg
           maintainer: Rouven Himmelstein
-          version: ${{ github.run_number }}
+          version: 1.${{ github.run_number }}.0
           arch: 'amd64'
           desc: 'Changes the wallpaper from the command line.'
 
@@ -168,13 +174,19 @@ jobs:
           name: artifact-linux-x86_64
           path: .
 
+      - name: Prepare rpm build
+        run: |
+          mkdir -p .pkg/usr/bin/
+          cp chwp-linux-x86-64 .pkg/usr/bin/
+          chmod +x .pkg/usr/bin/chwp-linux-x86-64
+
       - name: Build rpm file
         uses: jiro4989/build-rpm-action@v2
         with:
           package: chwp
-          package_root: .
+          package_root: .pkg
           maintainer: Rouven Himmelstein
-          version: ${{ github.run_number }}
+          version: 1.${{ github.run_number }}.0
           arch: 'x86_64'
           desc: 'Changes the wallpaper from the command line.'
 
