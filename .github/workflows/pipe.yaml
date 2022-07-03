@@ -157,14 +157,14 @@ jobs:
 
       - name: Rename deb file
         run: |
-          mv *.deb chwp_x86_64.deb
+          mv *.deb chwp-x86-64.deb
 
       - name: Upload deb artifact
         uses: actions/upload-artifact@v3
         with:
           name: artifact-deb-x86_64
           path: |
-            chwp_x86_64.deb
+            chwp-x86-64.deb
 
   build-rpm-package:
     name: Build rpm package
@@ -197,14 +197,14 @@ jobs:
       - name: Rename rpm file
         run: |
           rm *debuginfo*.rpm
-          mv *.rpm chwp_x86_64.rpm
+          mv *.rpm chwp-x86-64.rpm
 
       - name: Upload rpm artifact
         uses: actions/upload-artifact@v3
         with:
           name: artifact-rpm-x86_64
           path: |
-            chwp_x86_64.rpm
+            chwp-x86-64.rpm
 
   github-release:
     name: Create GitHub release
