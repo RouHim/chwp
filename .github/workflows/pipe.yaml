@@ -257,7 +257,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: chwp_${{ github.run_number }}_amd64.deb
+          asset_path: chwp_*_amd64.deb
           asset_name: chwp-linux-x86-64.deb
           asset_content_type: application/x-executable
 
@@ -267,7 +267,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: chwp_${{ github.run_number }}_x86_64.rpm
+          asset_path: chwp_*_x86_64.rpm
           asset_name: chwp-linux-x86-64.rpm
           asset_content_type: application/x-executable
 
