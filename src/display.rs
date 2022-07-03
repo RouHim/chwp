@@ -88,6 +88,7 @@ pub(crate) fn get_display_resolutions() -> Vec<String> {
     let event_loop = winit::event_loop::EventLoop::new();
 
     let window = winit::window::WindowBuilder::new()
+        .with_visible(false)
         .build(&event_loop)
         .unwrap();
 
