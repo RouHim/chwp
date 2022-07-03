@@ -19,6 +19,10 @@ dirs = "4.0.0"          # Platform-specific folder special detection, e.g. temp 
 ureq = "2.4.0"          # Http client library
 winit = "0.26.1"        # To obtain monitor boundaries
 
+[dev-dependencies]
+assertor = "0.0.1"
+pretty_assertions = "1.2.1"
+
 # Strip debug symbols in release mode
 [profile.release]
 strip = "symbols"
