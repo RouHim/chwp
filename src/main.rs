@@ -19,6 +19,10 @@ mod xfce;
 mod config_test;
 #[cfg(test)]
 mod download_test;
+#[cfg(test)]
+mod filesystem_test;
+#[cfg(test)]
+mod image_processor_test;
 
 fn main() {
     // get args with app path
