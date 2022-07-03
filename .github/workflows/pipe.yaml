@@ -164,7 +164,7 @@ jobs:
         with:
           name: artifact-deb-x86_64
           path: |
-            ./*.deb
+            chwp_x86_64.deb
 
   build-rpm-package:
     name: Build rpm package
@@ -204,7 +204,7 @@ jobs:
         with:
           name: artifact-rpm-x86_64
           path: |
-            ./*.rpm
+            chwp_x86_64.rpm
 
   github-release:
     name: Create GitHub release
@@ -255,7 +255,7 @@ jobs:
           asset_name: chwp-linux-x86-64
           asset_content_type: application/x-executable
 
-      - name: Upload linux-x86_64 debian asset
+      - name: Upload debian x86_64 asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -265,7 +265,7 @@ jobs:
           asset_name: chwp-x86-64.deb
           asset_content_type: application/x-executable
 
-      - name: Upload linux-x86_64 rpm asset
+      - name: Upload rpm x86_64 asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
