@@ -73,7 +73,7 @@ fn multiply_resolution(resolution: &str) -> i32 {
 
 /// Gets the total desktop resolution.
 /// # Example Two desktops (1) 1920x1080 (2) 1920x1080 | get_total_resolution() -> "3840x1080"
-pub(crate) fn get_total_resolution() -> String {
+pub fn get_total_resolution() -> String {
     return execute_display_command(
         r#"xprop -notype -len 16 -root _NET_DESKTOP_GEOMETRY | cut -c 25-"#,
     )
@@ -84,7 +84,7 @@ pub(crate) fn get_total_resolution() -> String {
 
 /// Gets all available display resolutions
 /// # Example: ["1920x1080", "2560x1440"]
-pub(crate) fn get_display_resolutions() -> Vec<String> {
+pub fn get_display_resolutions() -> Vec<String> {
     let event_loop = winit::event_loop::EventLoop::new();
 
     let window = winit::window::WindowBuilder::new()

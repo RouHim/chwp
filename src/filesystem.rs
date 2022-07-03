@@ -4,7 +4,7 @@ use std::path::PathBuf;
 
 use rand::Rng;
 
-/// Reads image data from a local path
+/// Reads data from a local file path
 /// If the provided path is a directory, a random image is chosen
 pub fn read_file(file_path: &str) -> Vec<u8> {
     if metadata(file_path).unwrap().is_file() {
@@ -27,6 +27,10 @@ fn read_random_file_from_directory(directory_path: &str) -> Vec<u8> {
         if dir_entry.metadata().unwrap().is_file() && is_picture(dir_entry.path()) {
             images.push(dir_entry.path().to_str().unwrap().to_string())
         }
+    }
+
+    if images.is_empty() {
+        return vec![];
     }
 
     let random_index = rand::thread_rng().gen_range(0..images.len());

@@ -17,7 +17,7 @@ pub fn parse_cli_args(args: Vec<String>) -> Config {
     let span_string = "span".to_string();
     let span = args.contains(&span_string);
 
-    let mut keywords = args.to_vec();
+    let mut keywords = args;
     remove_element(&mut keywords, span_string);
 
     let keyword = if keywords.is_empty() {
