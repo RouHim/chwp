@@ -234,6 +234,9 @@ jobs:
           name: artifact-rpm-x86_64
           path: .
 
+      - name: debug
+        run: ls -lsh
+
       - name: Create GitHub release
         id: create_release
         uses: actions/create-release@v1
