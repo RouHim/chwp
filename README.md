@@ -35,7 +35,7 @@ This snippet will download and install the latest chwp release:
 
 ```shell
 LATEST_VERSION=$(curl -L -s -H 'Accept: application/json' https://github.com/RouHim/chwp/releases/latest | sed -e 's/.*"tag_name":"\([^"]*\)".*/\1/') && \
-sudo curl -L -o /usr/bin/chwp https://github.com/RouHim/chwp/releases/download/$LATEST_VERSION/chwp-linux-x86_64 && \
+sudo curl -L -o /usr/bin/chwp https://github.com/RouHim/chwp/releases/download/$LATEST_VERSION/chwp-linux-x86-64 && \
 sudo chmod +x /usr/bin/chwp
 ```
 
