@@ -67,6 +67,13 @@ Set a wallpaper from a specific image url:
 chwp https://source.unsplash.com/1920x1080
 ```
 
+Set a wallpaper from a local path. 
+A random one will be chosen:
+
+```shell
+chwp /path/to/pictures/
+```
+
 Set a wallpaper from multiple keywords, a random one will be selected:
 
 ```shell
