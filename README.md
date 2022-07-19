@@ -6,7 +6,7 @@
     <a href="https://github.com/RouHim/chwp/actions/workflows/pipe.yaml"><img src="https://github.com/RouHim/chwp/actions/workflows/pipe.yaml/badge.svg" alt="CI"></a>
     <a href="https://github.com/RouHim/chwp/releases"><img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/rouhim/chwp?label=version"></a>
     <a href="https://github.com/RouHim/chwp/releases"><img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/RouHim/chwp"></a>
-
+<a href="https://buymeacoffee.com/rouhim"><img alt="Donate me" src="https://img.shields.io/badge/-buy_me_a%C2%A0coffee-gray?logo=buy-me-a-coffee"></a>
 </p>
 
 <p align="center">
