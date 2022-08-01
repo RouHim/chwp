@@ -1,4 +1,5 @@
 use std::env;
+use winit::window::Window;
 
 use crate::cli;
 
@@ -11,9 +12,9 @@ pub struct DisplayInfo {
 }
 
 /// Gets the current display information
-pub fn get_info() -> DisplayInfo {
-    let resolutions = get_display_resolutions();
-    let max_single_resolution = get_max_single_display_resolution();
+pub fn get_info(window: Window) -> DisplayInfo {
+    let resolutions = get_display_resolutions(&window);
+    let max_single_resolution = get_max_single_display_resolution(&window);
     let total_resolution = get_total_resolution();
 
     DisplayInfo {
@@ -34,8 +35,8 @@ fn is_wayland() -> bool {
 
 /// Gets the maximum resolution of a single display
 /// # Returns the maximum resolution of a single display
-fn get_max_single_display_resolution() -> String {
-    let resolutions = get_display_resolutions();
+fn get_max_single_display_resolution(window: &Window) -> String {
+    let resolutions = get_display_resolutions(window);
     let mut max_resolution = 0;
     let mut resolution_string = String::from("");
 
@@ -84,14 +85,7 @@ pub fn get_total_resolution() -> String {
 
 /// Gets all available display resolutions
 /// # Example: ["1920x1080", "2560x1440"]
-pub fn get_display_resolutions() -> Vec<String> {
-    let event_loop = winit::event_loop::EventLoop::new();
-
-    let window = winit::window::WindowBuilder::new()
-        .with_visible(false)
-        .build(&event_loop)
-        .unwrap();
-
+pub fn get_display_resolutions(window: &Window) -> Vec<String> {
     window
         .available_monitors()
         .map(|monitor| format!("{}x{}", monitor.size().width, monitor.size().height))

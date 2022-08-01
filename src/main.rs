@@ -25,6 +25,12 @@ mod filesystem_test;
 mod image_processor_test;
 
 fn main() {
+    // Build event loop
+    let window = winit::window::WindowBuilder::new()
+        .with_visible(false)
+        .build(&winit::event_loop::EventLoop::new())
+        .unwrap();
+
     // get args with app path
     let args: Vec<String> = env::args().skip(1).collect();
 
@@ -32,7 +38,7 @@ fn main() {
     let config = config::parse_cli_args(args);
 
     // read the display info
-    let display_info = display::get_info();
+    let display_info = display::get_info(window);
 
     // retrieve the image data from pixabay
     let image_data = if config::is_url(&config.query) {
