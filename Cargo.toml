@@ -12,7 +12,7 @@ categories = ["command-line-utilities"]
 edition = "2021"
 
 [dependencies]
-serde_json = "1.0.88"   # String to json
+serde_json = "1.0.89"   # String to json
 rand = "0.8.5"          # Generate random
 image = "0.24.5"        # Image processing (rotate, flip, ...)
 dirs = "4.0.0"          # Platform-specific special folder detection, e.g. temp dir
