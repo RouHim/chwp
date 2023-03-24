@@ -12,12 +12,12 @@ categories = ["command-line-utilities"]
 edition = "2021"
 
 [dependencies]
-serde_json = "1.0.94"   # String to json
-rand = "0.8.5"          # Generate random
-image = "0.24.5"        # Image processing (rotate, flip, ...)
-dirs = "5.0.0"          # Platform-specific special folder detection, e.g. temp dir
-ureq = "2.6.2"          # Http client library
-winit = "0.28.3"        # To obtain monitor boundaries
+serde_json = "1.0"   # String to json
+rand = "0.8"          # Generate random
+image = "0.24"        # Image processing (rotate, flip, ...)
+dirs = "5.0"          # Platform-specific special folder detection, e.g. temp dir
+ureq = "2.6"          # Http client library
+winit = "0.28"        # To obtain monitor boundaries
 
 [dev-dependencies]
 assertor = "0.0.1"
