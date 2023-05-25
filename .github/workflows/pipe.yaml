@@ -146,7 +146,7 @@ jobs:
           chmod +x .pkg/usr/bin/chwp
 
       - name: Build deb file
-        uses: jiro4989/build-deb-action@v2
+        uses: jiro4989/build-deb-action@v3
         with:
           package: chwp
           package_root: .pkg
