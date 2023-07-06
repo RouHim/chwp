@@ -21,7 +21,7 @@ winit = "0.28"        # To obtain monitor boundaries
 
 [dev-dependencies]
 assertor = "0.0.2"
-pretty_assertions = "1.3.0"
+pretty_assertions = "1.4.0"
 
 [profile.release]
 panic = "abort" # Strip expensive panic clean-up logic
