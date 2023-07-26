@@ -98,7 +98,7 @@ jobs:
         run: cargo install cargo-udeps --locked
 
       - name: Analyze dependencies
-        run: cargo +nightly udeps
+        run: cargo update && cargo +nightly udeps
 
   build:
     name: Build executable
