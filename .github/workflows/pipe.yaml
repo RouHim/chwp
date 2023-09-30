@@ -311,41 +311,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  publish-crates-io:
-    name: Publish on crates.io
-    needs: [ build ]
-    runs-on: ubuntu-latest
-    if: github.ref_name == 'main' # only publish if the branch is main
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Install rust toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          profile: default
-          toolchain: stable
-
-      - uses: Swatinem/rust-cache@v2 # use /rust/cargo caching
-
-      - name: Detect and set latest github release VERSION
-        shell: bash
-        run: |
-          REPO="RouHim/chwp"
-          LATEST_RELEASE=$(curl --silent "https://api.github.com/repos/$REPO/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
-          echo "Latest release is $LATEST_RELEASE"
-          echo "VERSION=$LATEST_RELEASE" >> $GITHUB_ENV
-
-      - uses: cargo-bins/cargo-binstall@main
-      - name: Publish on crates.io
-        run: |
-          cargo binstall --no-confirm --force cargo-edit
-          cargo set-version ${{ env.VERSION }}
-          cargo publish --token ${{ secrets.CRATES_IO_TOKEN }} --allow-dirty
 
   publish-aur-git:
     name: Publish AUR Git package
-    needs: [ publish-crates-io ]
+    needs: [ release ]
     runs-on: ubuntu-latest
     if: github.ref_name == 'main' # only publish if the branch is main
     steps:
