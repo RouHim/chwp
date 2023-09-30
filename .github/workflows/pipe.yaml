@@ -151,7 +151,8 @@ jobs:
             @semantic-release/gitlab  \
             @semantic-release/changelog  \
             @semantic-release/exec \
-            @semantic-release/commit-analyzer
+            @semantic-release/commit-analyzer \
+            @semantic-release-cargo/semantic-release-cargo
 
       - name: Generate Semantic Release Notes and Create Release
         env:
