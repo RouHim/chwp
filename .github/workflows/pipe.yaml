@@ -224,13 +224,41 @@ jobs:
           path: |
             chwp-x86-64.rpm
 
-  github-release:
-    name: Create GitHub release
+  release:
+    name: Create release
     runs-on: ubuntu-latest
-    needs: [ build, build-deb-package , build-rpm-package ]
+    needs: [ release, build-deb-package , build-rpm-package ]
     if: github.ref_name == 'main' # only publish if the branch is main
-    permissions:
-      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      # Create a new release based on semantic versioning
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+
+      - name: Install Dependencies
+        run: |
+          npm install -g \
+             semantic-release  \
+            @semantic-release/git  \
+            @semantic-release/gitlab  \
+            @semantic-release/changelog  \
+            @semantic-release/exec \
+            @semantic-release/commit-analyzer
+
+      - name: Generate Semantic Release Notes and Create Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+        run: npx semantic-release
+
+
+  upload-assets:
+    name: Upload assets to release
+    runs-on: ubuntu-latest
+    needs: [ release ]
+    if: github.ref_name == 'main' # only publish if the branch is main
     steps:
       - uses: actions/checkout@v4
 
@@ -251,28 +279,6 @@ jobs:
         with:
           name: artifact-rpm-x86_64
           path: .
-
-      # Create a new release based on semantic versioning
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18.x
-
-      - name: Install Dependencies
-        run: |
-          npm install -g \
-             semantic-release  \
-            @semantic-release/git  \
-            @semantic-release/gitlab  \
-            @semantic-release/changelog  \
-            @semantic-release/exec \
-            @semantic-release/commit-analyzer \
-            conventional-changelog-conventionalcommits
-
-      - name: Generate Semantic Release Notes and Create Release
-        env:
-          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
-        run: npx semantic-release
 
       - name: Upload plain linux-x86_64 asset
         run: |
