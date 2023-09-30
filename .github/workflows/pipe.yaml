@@ -94,8 +94,9 @@ jobs:
       - uses: Swatinem/rust-cache@v2 # use /rust/cargo caching
         continue-on-error: true # upload cache even if there are errors in this step
 
+      - uses: cargo-bins/cargo-binstall@main
       - name: Install cargo-udeps
-        run: cargo install cargo-udeps --locked
+        run: cargo binstall --no-confirm --force cargo-udeps
 
       - name: Analyze dependencies
         run: cargo update && cargo +nightly udeps
@@ -127,11 +128,20 @@ jobs:
           name: artifact-linux-x86_64
           path: chwp-linux-x86-64
 
+
   build-deb-package:
     name: Build deb package
     needs: [ build ]
     runs-on: ubuntu-latest
     steps:
+
+      - name: Detect and set latest github release VERSION
+        shell: bash
+        run: |
+          REPO="RouHim/chwp"
+          LATEST_RELEASE=$(curl --silent "https://api.github.com/repos/$REPO/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
+          echo "Latest release is $LATEST_RELEASE"
+          echo "VERSION=$LATEST_RELEASE" >> $GITHUB_ENV
 
       - name: Download previously built application
         uses: actions/download-artifact@v3
@@ -151,7 +161,7 @@ jobs:
           package: chwp
           package_root: .pkg
           maintainer: Rouven Himmelstein
-          version: 1.${{ github.run_number }}.0
+          version: ${{ env.VERSION }}
           arch: 'amd64'
           desc: 'Changes the wallpaper from the command line.'
 
@@ -172,6 +182,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
+      - name: Detect and set latest github release VERSION
+        shell: bash
+        run: |
+          REPO="RouHim/chwp"
+          LATEST_RELEASE=$(curl --silent "https://api.github.com/repos/$REPO/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
+          echo "Latest release is $LATEST_RELEASE"
+          echo "VERSION=$LATEST_RELEASE" >> $GITHUB_ENV
+
       - name: Download previously built application
         uses: actions/download-artifact@v3
         with:
@@ -190,7 +208,7 @@ jobs:
           package: chwp
           package_root: .pkg
           maintainer: Rouven Himmelstein
-          version: 1.${{ github.run_number }}.0
+          version: ${{ env.VERSION }}
           arch: 'x86_64'
           desc: 'Changes the wallpaper from the command line.'
 
@@ -234,46 +252,48 @@ jobs:
           name: artifact-rpm-x86_64
           path: .
 
-      - name: Create GitHub release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # Create a new release based on semantic versioning
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
         with:
-          tag_name: v1.${{ github.run_number }}.0
-          release_name: Release 1.${{ github.run_number }}.0
-          draft: false
-          prerelease: false
+          node-version: 18.x
+
+      - name: Install Dependencies
+        run: |
+          npm install -g \
+             semantic-release  \
+            @semantic-release/git  \
+            @semantic-release/gitlab  \
+            @semantic-release/changelog  \
+            @semantic-release/exec \
+            @semantic-release/commit-analyzer \
+            conventional-changelog-conventionalcommits
+
+      - name: Generate Semantic Release Notes and Create Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+        run: npx semantic-release
 
       - name: Upload plain linux-x86_64 asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: chwp-linux-x86-64
-          asset_name: chwp-linux-x86-64
-          asset_content_type: application/x-executable
+        run: |
+          bash .github/scripts/upload-asset-to-release.sh \
+            ${{ secrets.RELEASE_TOKEN }} \
+            "chwp-linux-x86-64" \
+            "chwp-linux-x86-64"
 
       - name: Upload debian x86_64 asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: chwp-x86-64.deb
-          asset_name: chwp-x86-64.deb
-          asset_content_type: application/x-executable
+        run: |
+          bash .github/scripts/upload-asset-to-release.sh \
+            ${{ secrets.RELEASE_TOKEN }} \
+            "chwp-x86-64.deb" \
+            "chwp-x86-64.deb"
 
       - name: Upload rpm x86_64 asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: chwp-x86-64.rpm
-          asset_name: chwp-x86-64.rpm
-          asset_content_type: application/x-executable
+        run: |
+          bash .github/scripts/upload-asset-to-release.sh \
+            ${{ secrets.RELEASE_TOKEN }} \
+            "chwp-x86-64.rpm" \
+            "chwp-x86-64.rpm"
 
       - name: Delete old releases
         uses: dev-drprasad/delete-older-releases@v0.3.2
@@ -300,10 +320,19 @@ jobs:
 
       - uses: Swatinem/rust-cache@v2 # use /rust/cargo caching
 
+      - name: Detect and set latest github release VERSION
+        shell: bash
+        run: |
+          REPO="RouHim/chwp"
+          LATEST_RELEASE=$(curl --silent "https://api.github.com/repos/$REPO/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
+          echo "Latest release is $LATEST_RELEASE"
+          echo "VERSION=$LATEST_RELEASE" >> $GITHUB_ENV
+
+      - uses: cargo-bins/cargo-binstall@main
       - name: Publish on crates.io
         run: |
-          cargo install cargo-edit
-          cargo set-version 1."$GITHUB_RUN_NUMBER".0
+          cargo binstall --no-confirm --force cargo-edit
+          cargo set-version ${{ env.VERSION }}
           cargo publish --token ${{ secrets.CRATES_IO_TOKEN }} --allow-dirty
 
   publish-aur-git:
@@ -312,6 +341,14 @@ jobs:
     runs-on: ubuntu-latest
     if: github.ref_name == 'main' # only publish if the branch is main
     steps:
+
+      - name: Detect and set latest github release VERSION
+        shell: bash
+        run: |
+          REPO="RouHim/chwp"
+          LATEST_RELEASE=$(curl --silent "https://api.github.com/repos/$REPO/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
+          echo "Latest release is $LATEST_RELEASE"
+          echo "VERSION=$LATEST_RELEASE" >> $GITHUB_ENV
 
       - name: Set up AUR git environment
         run: |
@@ -330,7 +367,7 @@ jobs:
       - name: Set version to PKGBUILD
         run: |
           cd chwp-aur
-          sed -i "s/^pkgver=.*/pkgver=1.$GITHUB_RUN_NUMBER.0/" PKGBUILD
+          sed -i "s/^pkgver=.*/pkgver={{ env.VERSION }}/" PKGBUILD
 
       - name: Create SRCINFO
         run: |
@@ -340,7 +377,7 @@ jobs:
       - name: Push to AUR
         run: |
           cd chwp-aur
-          git commit -am "v1.$GITHUB_RUN_NUMBER.0"
+          git commit -am "v{{ env.VERSION }}"
           git push
 
   publish-aur-bin:
@@ -349,6 +386,14 @@ jobs:
     runs-on: ubuntu-latest
     if: github.ref_name == 'main' # only publish if the branch is main
     steps:
+
+      - name: Detect and set latest github release VERSION
+        shell: bash
+        run: |
+          REPO="RouHim/chwp"
+          LATEST_RELEASE=$(curl --silent "https://api.github.com/repos/$REPO/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
+          echo "Latest release is $LATEST_RELEASE"
+          echo "VERSION=$LATEST_RELEASE" >> $GITHUB_ENV
 
       - name: Set up AUR git environment
         run: |
@@ -367,7 +412,7 @@ jobs:
       - name: Set version to PKGBUILD
         run: |
           cd chwp-aur
-          sed -i "s/^pkgver=.*/pkgver=1.$GITHUB_RUN_NUMBER.0/" PKGBUILD
+          sed -i "s/^pkgver=.*/pkgver={{ env.VERSION }}/" PKGBUILD
 
       - name: Create SRCINFO
         run: |
@@ -377,5 +422,5 @@ jobs:
       - name: Push to AUR
         run: |
           cd chwp-aur
-          git commit -am "v1.$GITHUB_RUN_NUMBER.0"
+          git commit -am "v{{ env.VERSION }}"
           git push
