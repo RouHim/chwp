@@ -347,6 +347,7 @@ jobs:
         run: |
           cd chwp-aur
           sed -i "s/^pkgver=.*/pkgver={{ env.VERSION }}/" PKGBUILD
+          cat PKGBUILD
 
       - name: Create SRCINFO
         run: |
@@ -392,6 +393,7 @@ jobs:
         run: |
           cd chwp-aur
           sed -i "s/^pkgver=.*/pkgver={{ env.VERSION }}/" PKGBUILD
+          cat PKGBUILD
 
       - name: Create SRCINFO
         run: |
