@@ -1,3 +1,10 @@
+## [1.238.2](https://github.com/RouHim/chwp/compare/1.238.1...1.238.2) (2023-09-30)
+
+
+### Bug Fixes
+
+* **pipe:** AUR version ([721fbf3](https://github.com/RouHim/chwp/commit/721fbf3346cb0f8b67e0b3ee428eb3b5c2900d44))
+
 ## [1.238.1](https://github.com/RouHim/chwp/compare/1.238.0...1.238.1) (2023-09-30)
 
 
