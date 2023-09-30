@@ -4,7 +4,7 @@ set -e
 # It requires the GitHub Personal Access Token
 
 # The repository name in the format of user/repo
-REPO_NAME=RouHim/rouvens-arch-kickstart
+REPO_NAME=RouHim/chwp
 
 # The first argument is the GitHub Personal Access Token
 GITHUB_TOKEN=$1
