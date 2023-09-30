@@ -390,7 +390,7 @@ jobs:
 
   publish-aur-bin:
     name: Publish AUR Bin package
-    needs: [ github-release ]
+    needs: [ release ]
     runs-on: ubuntu-latest
     if: github.ref_name == 'main' # only publish if the branch is main
     steps:
