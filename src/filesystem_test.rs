@@ -76,7 +76,7 @@ fn read_file_text_file_whole_dir() {
 
 /// Cleans up the test folder.
 fn cleanup(test_dir: &Path) {
-    let _ = fs::remove_dir_all(&test_dir);
+    let _ = fs::remove_dir_all(test_dir);
 }
 
 /// Downloads a test image into the provided directory.
@@ -99,7 +99,7 @@ fn create_test_image(url: &str, test_dir: &Path, image_name: &str) -> (String, V
 /// # Returns the path to the temporary folder.
 fn create_test_dir() -> PathBuf {
     let random_string = rand::thread_rng().gen::<u32>().to_string();
-    let test_dir: PathBuf = env::temp_dir().join(TEST_FOLDER_NAME).join(&random_string);
+    let test_dir: PathBuf = env::temp_dir().join(TEST_FOLDER_NAME).join(random_string);
 
     if test_dir.exists() {
         fs::remove_dir_all(&test_dir).expect("Failed to remove test dir");
