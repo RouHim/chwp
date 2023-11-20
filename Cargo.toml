@@ -16,7 +16,7 @@ serde_json = "1.0.108"   # String to json
 rand = "0.8.5"           # Generate random
 image = "0.24.7"         # Image processing (rotate, flip, ...)
 dirs = "5.0.1"           # Platform-specific special folder detection, e.g. temp dir
-ureq = "2.8.0"           # Http client library
+ureq = "2.9.0"           # Http client library
 winit = "0.28.7"         # To obtain monitor boundaries
 
 [dev-dependencies]
