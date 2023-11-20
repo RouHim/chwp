@@ -2,6 +2,7 @@ extern crate image;
 extern crate rand;
 
 use std::env;
+use winit::event_loop::EventLoop;
 
 mod cli;
 mod config;
@@ -28,7 +29,7 @@ fn main() {
     // Build event loop
     let window = winit::window::WindowBuilder::new()
         .with_visible(false)
-        .build(&winit::event_loop::EventLoop::new())
+        .build(&EventLoop::new().unwrap())
         .unwrap();
 
     // get args with app path
