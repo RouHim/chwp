@@ -1,3 +1,5 @@
+## [1.238.18](https://github.com/RouHim/chwp/compare/1.238.17...1.238.18) (2024-01-02)
+
 ## [1.238.17](https://github.com/RouHim/chwp/compare/1.238.16...1.238.17) (2024-01-01)
 
 ## [1.238.16](https://github.com/RouHim/chwp/compare/1.238.15...1.238.16) (2023-12-31)
