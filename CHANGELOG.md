@@ -1,3 +1,15 @@
+# [1.239.0](https://github.com/RouHim/chwp/compare/1.238.20...1.239.0) (2024-03-13)
+
+
+### Bug Fixes
+
+* **pipe:** use latest node version for sem release ([fd4df3a](https://github.com/RouHim/chwp/commit/fd4df3ad1b653beb953a3e4f634f22d035f46cad))
+
+
+### Features
+
+* **http:** add system root certs to http requests ([fe5ea7c](https://github.com/RouHim/chwp/commit/fe5ea7cbbe26e385f3d4b107afe8e6428996d86e))
+
 ## [1.238.20](https://github.com/RouHim/chwp/compare/1.238.19...1.238.20) (2024-01-05)
 
 ## [1.238.19](https://github.com/RouHim/chwp/compare/1.238.18...1.238.19) (2024-01-04)
