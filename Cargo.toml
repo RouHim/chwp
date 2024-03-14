@@ -18,7 +18,7 @@ image = "0.25.0"         # Image processing (rotate, flip, ...)
 dirs = "5.0.1"           # Platform-specific special folder detection, e.g. temp dir
 winit = "0.29.15"
 ureq = "2.9.6"           # Http client library
-rustls = "0.22"         # To obtain monitor boundaries
+rustls = "0.23"         # To obtain monitor boundaries
 rustls-native-certs = "0.7.0" # Native certs for rustls
 
 [dev-dependencies]
