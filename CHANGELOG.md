@@ -1,3 +1,10 @@
+## [1.239.2](https://github.com/RouHim/chwp/compare/1.239.1...1.239.2) (2024-03-23)
+
+
+### Bug Fixes
+
+* rustls ([91004dc](https://github.com/RouHim/chwp/commit/91004dc16d6bf0faf92f5357bea57f8ec33977e2))
+
 ## [1.239.1](https://github.com/RouHim/chwp/compare/1.239.0...1.239.1) (2024-03-13)
 
 # [1.239.0](https://github.com/RouHim/chwp/compare/1.238.20...1.239.0) (2024-03-13)
