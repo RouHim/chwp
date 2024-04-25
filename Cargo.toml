@@ -17,7 +17,7 @@ rand = "0.8.5"           # Generate random
 image = "0.25.1"         # Image processing (rotate, flip, ...)
 dirs = "5.0.1"           # Platform-specific special folder detection, e.g. temp dir
 winit = "0.29.15"        # To obtain monitor boundaries
-ureq = "2.9.6"           # Http client library
+ureq = "2.9.7"           # Http client library
 
 [dev-dependencies]
 assertor = "0.0.2"
