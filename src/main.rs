@@ -3,6 +3,7 @@ extern crate rand;
 
 use std::env;
 use winit::event_loop::EventLoop;
+use winit::window::Window;
 
 mod cli;
 mod config;
@@ -27,10 +28,9 @@ mod image_processor_test;
 
 fn main() {
     // Build event loop
-    let window = winit::window::WindowBuilder::new()
-        .with_visible(false)
-        .build(&EventLoop::new().unwrap())
-        .unwrap();
+    let event_loop = EventLoop::new().unwrap();
+    let window_attributes = Window::default_attributes().with_title("A fantastic window!");
+    let window = event_loop.create_window(window_attributes).unwrap();
 
     // get args with app path
     let args: Vec<String> = env::args().skip(1).collect();
