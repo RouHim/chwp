@@ -20,7 +20,7 @@ winit = "0.29.15"        # To obtain monitor boundaries
 ureq = "2.9.7"           # Http client library
 
 [dev-dependencies]
-assertor = "0.0.2"
+assertor = "0.0.3"
 pretty_assertions = "1.4.0"
 
 [profile.release]
