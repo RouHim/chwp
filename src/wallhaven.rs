@@ -61,7 +61,7 @@ fn get_image_url(config: &Config, display_info: &DisplayInfo) -> Result<String, 
         return Err("No valid wallpaper URLs found in Wallhaven response".to_string());
     }
 
-    let random_index = rand::thread_rng().gen_range(0..images.len());
+    let random_index = rand::rng().random_range(0..images.len());
     Ok(images[random_index].to_string())
 }
 

@@ -39,7 +39,7 @@ fn read_random_file_from_directory(directory_path: &str) -> Vec<u8> {
         return vec![];
     }
 
-    let random_index = rand::thread_rng().gen_range(0..images.len());
+    let random_index = rand::rng().random_range(0..images.len());
     // Safe due to non-empty check above
     read_file(&images[random_index])
 }

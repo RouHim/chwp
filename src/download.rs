@@ -4,7 +4,11 @@ use std::io::Read;
 pub fn get_data(request_url: &str) -> Vec<u8> {
     let mut response = ureq::get(request_url).call().unwrap();
     let mut bytes: Vec<u8> = Vec::new();
-    response.body_mut().as_reader().read_to_end(&mut bytes).unwrap();
+    response
+        .body_mut()
+        .as_reader()
+        .read_to_end(&mut bytes)
+        .unwrap();
     bytes
 }
 

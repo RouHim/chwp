@@ -98,7 +98,7 @@ fn create_test_image(url: &str, test_dir: &Path, image_name: &str) -> (String, V
 /// Creates a temporary folder
 /// # Returns the path to the temporary folder.
 fn create_test_dir() -> PathBuf {
-    let random_string = rand::thread_rng().gen::<u32>().to_string();
+    let random_string = rand::rng().random::<u32>().to_string();
     let test_dir: PathBuf = env::temp_dir().join(TEST_FOLDER_NAME).join(random_string);
 
     if test_dir.exists() {
