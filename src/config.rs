@@ -6,6 +6,7 @@ use rand::Rng;
 pub struct Config {
     pub span: bool,
     pub query: String,
+    pub api_key: Option<String>,
 }
 
 /// Parse the CLI arguments
@@ -21,7 +22,7 @@ pub fn parse_cli_args(args: Vec<String>) -> Config {
     remove_element(&mut keywords, span_string);
 
     let keyword = if keywords.is_empty() {
-        "wallpaper".to_string()
+        "".to_string()
     } else {
         choose_random_keyword(keywords)
     };
@@ -29,6 +30,7 @@ pub fn parse_cli_args(args: Vec<String>) -> Config {
     Config {
         span,
         query: keyword,
+        api_key: std::env::var("WALLHAVEN_API_KEY").ok(),
     }
 }
 
