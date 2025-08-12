@@ -41,7 +41,7 @@ fn get_image_url(config: &Config, display_info: &DisplayInfo) -> String {
         .collect();
 
     let random_index = rand::thread_rng().gen_range(0..images.len());
-    return images.get(random_index).unwrap().to_string();
+    images.get(random_index).unwrap().to_string()
 }
 
 /// Builds the request url

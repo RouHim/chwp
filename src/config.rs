@@ -38,12 +38,12 @@ pub fn parse_cli_args(args: Vec<String>) -> Config {
 /// # Returns
 /// A random keyword
 fn choose_random_keyword(keywords: Vec<String>) -> String {
-    return if keywords.len() > 1 {
+    if keywords.len() > 1 {
         let random_index = rand::thread_rng().gen_range(0..keywords.len());
         keywords.get(random_index).unwrap().to_string()
     } else {
-        keywords.get(0).unwrap().to_string()
-    };
+        keywords.first().unwrap().to_string()
+    }
 }
 
 /// Remove an element from a vector
@@ -69,11 +69,22 @@ pub fn is_url(to_check: &str) -> bool {
     to_check.starts_with("http") && to_check.contains("://")
 }
 
+/// Expand a leading '~/' to the user's home directory
+fn expand_tilde(path: &str) -> String {
+    if let Some(rest) = path.strip_prefix("~/") {
+        if let Some(home) = dirs::home_dir() {
+            return home.join(rest).to_string_lossy().into_owned();
+        }
+    }
+    path.to_string()
+}
+
 /// Check if a string is a local path
 /// # Arguments
 /// * `to_check` - The string to check
 /// # Returns
 /// True if the string is a local path
 pub fn is_local_path(to_check: &str) -> bool {
-    return Path::new(to_check).exists();
+    let expanded = expand_tilde(to_check);
+    Path::new(&expanded).exists()
 }

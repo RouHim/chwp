@@ -5,7 +5,9 @@ use crate::cli;
 
 /// Container that holds information about the display current configuration
 pub struct DisplayInfo {
+    #[allow(dead_code)]
     pub count: i8,
+    #[allow(dead_code)]
     pub resolutions: Vec<String>,
     pub total_resolution: String,
     pub max_single_resolution: String,
@@ -75,12 +77,12 @@ fn multiply_resolution(resolution: &str) -> i32 {
 /// Gets the total desktop resolution.
 /// # Example Two desktops (1) 1920x1080 (2) 1920x1080 | get_total_resolution() -> "3840x1080"
 pub fn get_total_resolution() -> String {
-    return execute_display_command(
+    execute_display_command(
         r#"xprop -notype -len 16 -root _NET_DESKTOP_GEOMETRY | cut -c 25-"#,
     )
     .replace(", ", "x")
     .trim()
-    .to_string();
+    .to_string()
 }
 
 /// Gets all available display resolutions
@@ -123,11 +125,11 @@ fn is_display_var_set() -> bool {
 /// assert_eq!(get_width("1920x1080"), 1920);
 /// ```
 pub fn get_width(resolution_string: &str) -> String {
-    return resolution_string
+    resolution_string
         .split('x')
         .next()
         .expect("wrong display resolution format")
-        .to_string();
+        .to_string()
 }
 
 /// Gets the height of a resolution string
@@ -141,9 +143,9 @@ pub fn get_width(resolution_string: &str) -> String {
 /// assert_eq!(get_height("1920x1080"), 1080);
 /// ```
 pub fn get_height(resolution_string: &str) -> String {
-    return resolution_string
+    resolution_string
         .split('x')
         .nth(1)
         .expect("wrong display resolution format")
-        .to_string();
+        .to_string()
 }

@@ -4,13 +4,24 @@ use std::path::PathBuf;
 
 use rand::Rng;
 
+/// Expand a leading '~/' to the user's home directory
+fn expand_tilde(path: &str) -> String {
+    if let Some(rest) = path.strip_prefix("~/") {
+        if let Some(home) = dirs::home_dir() {
+            return home.join(rest).to_string_lossy().into_owned();
+        }
+    }
+    path.to_string()
+}
+
 /// Reads data from a local file path
 /// If the provided path is a directory, a random image is chosen
 pub fn read_file(file_path: &str) -> Vec<u8> {
-    if metadata(file_path).unwrap().is_file() {
-        fs::read(file_path).expect("Unable to read file")
+    let file_path = expand_tilde(file_path);
+    if metadata(&file_path).unwrap().is_file() {
+        fs::read(&file_path).expect("Unable to read file")
     } else {
-        read_random_file_from_directory(file_path)
+        read_random_file_from_directory(&file_path)
     }
 }
 
@@ -34,18 +45,16 @@ fn read_random_file_from_directory(directory_path: &str) -> Vec<u8> {
     }
 
     let random_index = rand::thread_rng().gen_range(0..images.len());
-    return read_file(images.get(random_index).unwrap());
+    read_file(images.get(random_index).unwrap())
 }
 
 /// Check if a file is an image
 /// Allowed file extension are: jpg, jpeg, png, bmp, gif, tiff, webp
 fn is_picture(file_path: PathBuf) -> bool {
-    let file_extension = file_path
-        .extension()
-        .unwrap()
-        .to_str()
-        .unwrap()
-        .to_lowercase();
+    let Some(ext) = file_path.extension().and_then(|e| e.to_str()) else {
+        return false;
+    };
+    let file_extension = ext.to_lowercase();
 
     file_extension == "jpg"
         || file_extension == "jpeg"
