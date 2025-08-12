@@ -13,8 +13,8 @@ mod filesystem;
 mod gnome;
 mod image_processor;
 mod kde;
-mod pixabay;
 mod utils;
+mod wallhaven;
 mod xfce;
 
 #[cfg(test)]
@@ -25,6 +25,8 @@ mod download_test;
 mod filesystem_test;
 #[cfg(test)]
 mod image_processor_test;
+#[cfg(test)]
+mod wallhaven_test;
 
 fn main() {
     // Build event loop
@@ -42,13 +44,19 @@ fn main() {
     // read the display info
     let display_info = display::get_info(window);
 
-    // retrieve the image data from pixabay
+    // retrieve the image data from wallhaven
     let image_data = if config::is_url(&config.query) {
         download::get_data(&config.query)
     } else if config::is_local_path(&config.query) {
         filesystem::read_file(&config.query)
     } else {
-        pixabay::get_image_data(&config, &display_info)
+        match wallhaven::get_image_data(&config, &display_info) {
+            Ok(data) => data,
+            Err(error) => {
+                eprintln!("Error: {}", error);
+                std::process::exit(1);
+            }
+        }
     };
 
     // scale the image to fit the display
