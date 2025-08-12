@@ -4,39 +4,34 @@ use std::path::PathBuf;
 
 use rand::Rng;
 
-/// Expand a leading '~/' to the user's home directory
-fn expand_tilde(path: &str) -> String {
-    if let Some(rest) = path.strip_prefix("~/") {
-        if let Some(home) = dirs::home_dir() {
-            return home.join(rest).to_string_lossy().into_owned();
-        }
-    }
-    path.to_string()
-}
 use crate::utils::expand_tilde;
 /// Reads data from a local file path
 /// If the provided path is a directory, a random image is chosen
 pub fn read_file(file_path: &str) -> Vec<u8> {
     let file_path = expand_tilde(file_path);
-    if metadata(&file_path).unwrap().is_file() {
-        fs::read(&file_path).expect("Unable to read file")
-    } else {
-        read_random_file_from_directory(&file_path)
+    if let Ok(meta) = metadata(&file_path) {
+        if meta.is_file() {
+            return fs::read(&file_path).expect("Unable to read file");
+        }
     }
+    read_random_file_from_directory(&file_path)
 }
 
 /// Reads a random image from a directory
 /// If the directory is empty, returns an empty vector
 /// If the directory is not empty, returns a random image
 fn read_random_file_from_directory(directory_path: &str) -> Vec<u8> {
-    let paths = fs::read_dir(directory_path).unwrap();
-
     let mut images = vec![];
 
-    for path in paths {
-        let dir_entry = path.unwrap();
-        if dir_entry.metadata().unwrap().is_file() && is_picture(dir_entry.path()) {
-            images.push(dir_entry.path().to_str().unwrap().to_string())
+    if let Ok(paths) = fs::read_dir(directory_path) {
+        for dir_entry in paths.flatten() {
+            if let Ok(meta) = dir_entry.metadata() {
+                if meta.is_file() && is_picture(dir_entry.path()) {
+                    if let Some(p) = dir_entry.path().to_str() {
+                        images.push(p.to_string());
+                    }
+                }
+            }
         }
     }
 
@@ -45,7 +40,8 @@ fn read_random_file_from_directory(directory_path: &str) -> Vec<u8> {
     }
 
     let random_index = rand::thread_rng().gen_range(0..images.len());
-    read_file(images.get(random_index).unwrap())
+    // Safe due to non-empty check above
+    read_file(&images[random_index])
 }
 
 /// Check if a file is an image

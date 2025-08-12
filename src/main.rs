@@ -14,6 +14,7 @@ mod gnome;
 mod image_processor;
 mod kde;
 mod pixabay;
+mod utils;
 mod xfce;
 
 #[cfg(test)]

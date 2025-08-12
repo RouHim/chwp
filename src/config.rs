@@ -69,15 +69,7 @@ pub fn is_url(to_check: &str) -> bool {
     to_check.starts_with("http") && to_check.contains("://")
 }
 
-/// Expand a leading '~/' to the user's home directory
-fn expand_tilde(path: &str) -> String {
-    if let Some(rest) = path.strip_prefix("~/") {
-        if let Some(home) = dirs::home_dir() {
-            return home.join(rest).to_string_lossy().into_owned();
-        }
-    }
-    path.to_string()
-}
+use crate::utils::expand_tilde;
 
 /// Check if a string is a local path
 /// # Arguments
