@@ -115,10 +115,10 @@ fn set_gnome_wallpaper(picture_option: &str, wallpaper_file_path_fqdn: &str) {
 
 /// Gets the name of the current display manager
 fn get_display_manager() -> String {
-    return env::var("XDG_CURRENT_DESKTOP")
+    env::var("XDG_CURRENT_DESKTOP")
         .unwrap()
         .trim()
-        .to_lowercase();
+        .to_lowercase()
 }
 
 /// Clears the wallpaper directory
@@ -133,9 +133,11 @@ fn clear_wallpaper_dir() {
 /// * `image` - The image to store
 /// # Returns the path to the file
 fn persist_to_file(image_data: DynamicImage) -> String {
+    // Save as PNG to avoid JPEG RGBA unsupported errors, DEs accept PNG
     let path = build_target_path();
     image_data
-        .save(path.as_str())
+        .to_rgba8()
+        .save_with_format(path.as_str(), image::ImageFormat::Png)
         .expect("Unable to save image");
     path
 }
@@ -148,7 +150,7 @@ fn build_target_path() -> String {
         .unwrap()
         .as_millis()
         .to_string();
-    let file_name = format!("{current_millis}.jpg");
+    let file_name = format!("{current_millis}.png");
 
     dirs::home_dir()
         .unwrap()

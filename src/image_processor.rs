@@ -94,12 +94,12 @@ fn calculate_display_ratio(span: bool, display_info: &&DisplayInfo) -> f32 {
 /// assert_eq!(display_width, 1920);
 /// ```
 fn get_width(resolution_string: &str) -> usize {
-    return resolution_string
+    resolution_string
         .split('x')
         .next()
         .expect("wrong display resolution format")
         .parse()
-        .unwrap();
+        .unwrap()
 }
 
 /// Gets the height of the resolution string
@@ -118,10 +118,10 @@ fn get_width(resolution_string: &str) -> usize {
 /// assert_eq!(display_height, 1080);
 /// ```
 fn get_height(resolution_string: &str) -> usize {
-    return resolution_string
+    resolution_string
         .split('x')
         .nth(1)
         .expect("wrong display resolution format")
         .parse()
-        .unwrap();
+        .unwrap()
 }
