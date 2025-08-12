@@ -13,7 +13,7 @@ fn expand_tilde(path: &str) -> String {
     }
     path.to_string()
 }
-
+use crate::utils::expand_tilde;
 /// Reads data from a local file path
 /// If the provided path is a directory, a random image is chosen
 pub fn read_file(file_path: &str) -> Vec<u8> {
