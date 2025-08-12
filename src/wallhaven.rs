@@ -28,8 +28,8 @@ fn get_image_url(config: &Config, display_info: &DisplayInfo) -> Result<String, 
     let request_url = build_request_url(config, display_info);
     let json_string = download::get_string(&request_url);
 
-    let json_value: serde_json::Value =
-        serde_json::from_str(json_string.as_str()).map_err(|_| "Failed to parse Wallhaven API response".to_string())?;
+    let json_value: serde_json::Value = serde_json::from_str(json_string.as_str())
+        .map_err(|_| "Failed to parse Wallhaven API response".to_string())?;
 
     // Check for API errors
     if let Some(error) = json_value.get("error") {
@@ -96,7 +96,10 @@ pub fn build_request_url(config: &Config, display_info: &DisplayInfo) -> String 
 
     // Add minimum resolution requirement
     let separator = if has_params { "&" } else { "?" };
-    request_url.push_str(&format!("{}atleast={}x{}", separator, target_width, target_height));
+    request_url.push_str(&format!(
+        "{}atleast={}x{}",
+        separator, target_width, target_height
+    ));
 
     // Set categories to all (general, anime, people)
     request_url.push_str("&categories=111");
