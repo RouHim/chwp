@@ -1,3 +1,13 @@
+## [1.239.43](https://github.com/RouHim/chwp/compare/1.239.42...1.239.43) (2025-08-12)
+
+
+### Bug Fixes
+
+* **cli:** expand ~/ in local paths and save wallpapers as PNG ([3f8a83b](https://github.com/RouHim/chwp/commit/3f8a83b88fe4ead12bf9db52fe76119d4858b2ae))
+* **display:** streamline get_total_resolution function formatting ([a3a7a28](https://github.com/RouHim/chwp/commit/a3a7a28bb5356428229b9477938a5d9651a29848))
+* **filesystem:** refactor tilde expansion and improve file reading logic ([bd93eec](https://github.com/RouHim/chwp/commit/bd93eec73872e98b5b4ef4fdf1e3c717e809919b))
+* **utils:** add tilde expansion utility for path handling ([64224ed](https://github.com/RouHim/chwp/commit/64224edca8c2d0e54300e3b7150dc90990e13c7f))
+
 ## [1.239.42](https://github.com/RouHim/chwp/compare/1.239.41...1.239.42) (2025-08-11)
 
 ## [1.239.41](https://github.com/RouHim/chwp/compare/1.239.40...1.239.41) (2025-08-10)
