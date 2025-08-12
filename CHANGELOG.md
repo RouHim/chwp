@@ -1,3 +1,10 @@
+## [1.239.44](https://github.com/RouHim/chwp/compare/1.239.43...1.239.44) (2025-08-12)
+
+
+### Bug Fixes
+
+* resolve CI pipeline issues with formatting and rand 0.9 deprecations ([5715995](https://github.com/RouHim/chwp/commit/57159955d14ebcbeda445d37b430d35600974474))
+
 ## [1.239.43](https://github.com/RouHim/chwp/compare/1.239.42...1.239.43) (2025-08-12)
 
 
