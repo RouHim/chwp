@@ -77,12 +77,10 @@ fn multiply_resolution(resolution: &str) -> i32 {
 /// Gets the total desktop resolution.
 /// # Example Two desktops (1) 1920x1080 (2) 1920x1080 | get_total_resolution() -> "3840x1080"
 pub fn get_total_resolution() -> String {
-    execute_display_command(
-        r#"xprop -notype -len 16 -root _NET_DESKTOP_GEOMETRY | cut -c 25-"#,
-    )
-    .replace(", ", "x")
-    .trim()
-    .to_string()
+    execute_display_command(r#"xprop -notype -len 16 -root _NET_DESKTOP_GEOMETRY | cut -c 25-"#)
+        .replace(", ", "x")
+        .trim()
+        .to_string()
 }
 
 /// Gets all available display resolutions
