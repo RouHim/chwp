@@ -31,7 +31,7 @@ cargo install chwp
 
 ### Download latest binary
 
-This snippet will download and install the latest chwp release:
+This bash snippet will download and install the latest chwp release:
 
 ```shell
 LATEST_VERSION=$(curl -L -s -H 'Accept: application/json' https://github.com/RouHim/chwp/releases/latest | sed -e 's/.*"tag_name":"\([^"]*\)".*/\1/') && \
@@ -40,7 +40,7 @@ curl -L -o ~/.local/bin/chwp https://github.com/RouHim/chwp/releases/download/$L
 chmod +x ~/.local/bin/chwp
 ```
 
-> [!INFO]
+> [!TIP]
 > Ensure `~/.local/bin` is in your PATH. Add `export PATH="$HOME/.local/bin:$PATH"` to your shell's profile.
 
 ### Arch Linux
