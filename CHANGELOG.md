@@ -1,3 +1,10 @@
+## [1.239.48](https://github.com/RouHim/chwp/compare/1.239.47...1.239.48) (2025-09-04)
+
+
+### Bug Fixes
+
+* **docs:** trigger pipeline ([22496d0](https://github.com/RouHim/chwp/commit/22496d07c3453b7997d24302dc0c66d1e28d08c4))
+
 ## [1.239.47](https://github.com/RouHim/chwp/compare/1.239.46...1.239.47) (2025-09-03)
 
 ## [1.239.46](https://github.com/RouHim/chwp/compare/1.239.45...1.239.46) (2025-08-19)
