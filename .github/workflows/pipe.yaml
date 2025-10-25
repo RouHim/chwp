@@ -176,7 +176,7 @@ jobs:
           echo "VERSION=$LATEST_RELEASE" >> $GITHUB_ENV
 
       - name: Download previously built application
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           name: artifact-linux-x86_64
           path: .
@@ -224,7 +224,7 @@ jobs:
           echo "VERSION=$LATEST_RELEASE" >> $GITHUB_ENV
 
       - name: Download previously built application
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           name: artifact-linux-x86_64
           path: .
@@ -267,19 +267,19 @@ jobs:
       - uses: actions/checkout@v5
 
       - name: Download previous built application
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           name: artifact-linux-x86_64
           path: .
 
       - name: Download previous built deb asset
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           name: artifact-deb-x86_64
           path: .
 
       - name: Download previous built rpm asset
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           name: artifact-rpm-x86_64
           path: .
