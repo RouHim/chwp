@@ -123,7 +123,7 @@ jobs:
           cp target/x86_64-unknown-linux-gnu/release/chwp ./chwp-linux-x86-64
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: artifact-linux-x86_64
           path: chwp-linux-x86-64
@@ -202,7 +202,7 @@ jobs:
           mv *.deb chwp-x86-64.deb
 
       - name: Upload deb artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: artifact-deb-x86_64
           path: |
@@ -251,7 +251,7 @@ jobs:
           mv *.rpm chwp-x86-64.rpm
 
       - name: Upload rpm artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: artifact-rpm-x86_64
           path: |
