@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
@@ -29,7 +29,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Install rust toolchain
         uses: actions-rs/toolchain@v1
@@ -47,7 +47,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Install rust toolchain
         uses: actions-rs/toolchain@v1
@@ -65,7 +65,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Install rust toolchain
         uses: actions-rs/toolchain@v1
@@ -83,7 +83,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Install rust toolchain
         uses: actions-rs/toolchain@v1
@@ -107,7 +107,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Install rust toolchain
         uses: actions-rs/toolchain@v1
@@ -135,7 +135,7 @@ jobs:
     needs: [ build ]
     if: github.ref_name == 'main' # only publish if the branch is main
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       # Create a new release based on semantic versioning
       - name: Set up Node.js
@@ -264,7 +264,7 @@ jobs:
     needs: [ release, build-deb-package, build-rpm-package ]
     if: github.ref_name == 'main' # only publish if the branch is main
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - name: Download previous built application
         uses: actions/download-artifact@v6
