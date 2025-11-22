@@ -1,8 +1,12 @@
 extern crate image;
 extern crate rand;
 
+use mimalloc::MiMalloc;
 use std::env;
 use winit::event_loop::EventLoop;
+
+#[global_allocator]
+static GLOBAL: MiMalloc = MiMalloc;
 
 mod cli;
 mod config;
