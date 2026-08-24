@@ -1,5 +1,10 @@
 use assertor::{assert_that, EqualityAssertion, StringAssertion, VecAssertion};
 use std::env;
+use std::sync::{LazyLock, Mutex};
+
+/// Serializes tests that touch the WALLHAVEN_API_KEY environment variable,
+/// which is process-global and racy when tests run in parallel.
+static ENV_LOCK: LazyLock<Mutex<()>> = LazyLock::new(|| Mutex::new(()));
 
 use crate::config;
 use crate::display::DisplayInfo;
@@ -130,6 +135,9 @@ fn is_local_path_empty() {
 
 #[test]
 fn parse_cli_args_with_api_key_env_var() {
+    let _env_guard = ENV_LOCK
+        .lock()
+        .unwrap_or_else(|poisoned| poisoned.into_inner());
     // GIVEN an API key environment variable is set
     env::set_var("WALLHAVEN_API_KEY", "test_api_key_123");
     let args = vec!["nature".to_string()];
@@ -148,6 +156,9 @@ fn parse_cli_args_with_api_key_env_var() {
 
 #[test]
 fn parse_cli_args_without_api_key_env_var() {
+    let _env_guard = ENV_LOCK
+        .lock()
+        .unwrap_or_else(|poisoned| poisoned.into_inner());
     // GIVEN no API key environment variable is set
     env::remove_var("WALLHAVEN_API_KEY");
     let args = vec!["mountains".to_string()];
@@ -162,6 +173,9 @@ fn parse_cli_args_without_api_key_env_var() {
 
 #[test]
 fn integration_test_wallhaven_url_generation() {
+    let _env_guard = ENV_LOCK
+        .lock()
+        .unwrap_or_else(|poisoned| poisoned.into_inner());
     use std::env;
 
     // Test various scenarios to ensure URL generation works correctly
