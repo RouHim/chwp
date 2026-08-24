@@ -2,7 +2,7 @@ use std::fs;
 use std::fs::metadata;
 use std::path::PathBuf;
 
-use rand::Rng;
+use rand::RngExt;
 
 use crate::utils::expand_tilde;
 /// Reads data from a local file path

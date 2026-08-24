@@ -2,7 +2,7 @@ use std::path::{Path, PathBuf};
 use std::{env, fs};
 
 use assertor::{assert_that, EqualityAssertion, VecAssertion};
-use rand::Rng;
+use rand::RngExt;
 
 use crate::{download, filesystem};
 

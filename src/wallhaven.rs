@@ -1,4 +1,4 @@
-use rand::Rng;
+use rand::RngExt;
 
 use crate::config::Config;
 use crate::display::DisplayInfo;
