@@ -1,6 +1,6 @@
 use std::path::Path;
 
-use rand::Rng;
+use rand::RngExt;
 
 /// Holds the application configuration
 pub struct Config {
