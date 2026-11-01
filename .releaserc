@@ -13,6 +13,9 @@
     "@semantic-release/changelog",
     "@semantic-release/git",
     "@semantic-release/github",
-    "@semantic-release-cargo/semantic-release-cargo"
+    "@semantic-release-cargo/semantic-release-cargo",
+    ["@semantic-release/exec", {
+      "publishCmd": "test -z \"$GITHUB_OUTPUT\" || printf 'tag=%s\\n' '${nextRelease.version}' >> \"$GITHUB_OUTPUT\""
+    }]
   ]
 }

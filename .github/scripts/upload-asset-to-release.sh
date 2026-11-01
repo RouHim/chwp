@@ -1,32 +1,36 @@
-#!/bin/env bash
-set -e
-# This script uploads a file to the latest release of the repository
-# It requires the GitHub Personal Access Token
+#!/usr/bin/env bash
+set -euo pipefail
 
-# The repository name in the format of user/repo
-REPO_NAME=RouHim/chwp
+# Uploads an asset to an explicit release tag.
+# Usage: upload-asset-to-release.sh <token> <tag> <path> <asset-name>
 
-# The first argument is the GitHub Personal Access Token
-GITHUB_TOKEN=$1
+REPO_NAME="${GITHUB_REPOSITORY:-RouHim/chwp}"
 
-# The second argument is the path to the asset's file
-BIN_PATH=$2
+TOKEN="${1:?GitHub token is required}"
+TAG="${2:?Release tag is required}"
+BIN_PATH="${3:?Asset path is required}"
+NAME="${4:?Asset name is required}"
 
-# The third argument is the name of the asset's file in the release
-NAME=$3
+if [[ ! -f "$BIN_PATH" ]]; then
+  echo "error: asset not found: $BIN_PATH" >&2
+  exit 1
+fi
 
+export GH_TOKEN="$TOKEN"
 
-echo "Uploading $BIN_PATH to $NAME"
+echo "Uploading $BIN_PATH as $NAME to release $TAG"
 
-# Get the release ID from the latest release
-RELEASE_ID=$(curl -s https://api.github.com/repos/${REPO_NAME}/releases/latest | jq -r .id)
+# Fail loudly if the release does not exist instead of uploading to a bogus ID.
+gh release view "$TAG" \
+  --repo "$REPO_NAME" \
+  --json tagName \
+  --jq '.tagName' > /dev/null
 
-echo "Release ID: $RELEASE_ID"
+TMP_DIR="$(mktemp -d)"
+trap 'rm -rf "$TMP_DIR"' EXIT
 
-# Upload the asset
-UPLOAD_URL="https://uploads.github.com/repos/${REPO_NAME}/releases/${RELEASE_ID}/assets?name=${NAME}"
-curl -X POST \
-  -H "Content-Type: $(file -b --mime-type "$BIN_PATH")" \
-  -H "Authorization: token ${GITHUB_TOKEN}" \
-  -T "${BIN_PATH}" \
-  "${UPLOAD_URL}"
+# Upload under the requested asset name and replace an existing asset on retries.
+cp "$BIN_PATH" "$TMP_DIR/$NAME"
+gh release upload "$TAG" "$TMP_DIR/$NAME" --repo "$REPO_NAME" --clobber
+
+echo "Uploaded $NAME to $TAG"
