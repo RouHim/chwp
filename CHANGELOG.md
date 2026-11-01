@@ -1,3 +1,10 @@
+## [1.239.86](https://github.com/RouHim/chwp/compare/1.239.85...1.239.86) (2026-11-01)
+
+
+### Bug Fixes
+
+* **ci:** publish release assets reliably ([58c1484](https://github.com/RouHim/chwp/commit/58c1484299abf830f1a67eac184a3e8145926000))
+
 ## [1.239.85](https://github.com/RouHim/chwp/compare/1.239.84...1.239.85) (2026-10-29)
 
 ## [1.239.84](https://github.com/RouHim/chwp/compare/1.239.83...1.239.84) (2026-10-28)
