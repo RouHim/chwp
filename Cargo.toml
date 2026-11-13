@@ -5,7 +5,6 @@ authors = ["Rouven Himmelstein <rouven@himmelstein.info>"]
 license = "MIT"
 description = "Change your wallpaper from the command line interface."
 readme = "README.md"
-homepage = "https://github.com/RouHim/chwp"
 repository = "https://github.com/RouHim/chwp"
 keywords = ["cli", "wallpaper"]
 categories = ["command-line-utilities"]
